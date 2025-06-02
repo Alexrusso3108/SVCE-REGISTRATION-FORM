@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVCE - Admission Enquiry Form</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="loader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <!-- Enhanced 3D Loader overlay -->
+    <div class="loader-container" id="loader">
+        <!-- 3D floor grid effect -->
+        <div class="loader-floor"></div>
+        
+        <div class="loader-content">
+            <img src="logo3.jpg" alt="SVCE Logo" class="loader-logo">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">SVCE Admission Enquiry System</div>
+            <div class="loader-text">Loading your experience</div>
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="container content-container" id="main-content">
+        <header>
+            <div class="banner">
+                <img src="logo3.jpg" alt="SVCE Logo" id="logo-img">
+            </div>
+            <div class="print-button-container">
+                <button type="button" id="print-button" title="Print Form">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+            <div class="title-container">
+                <div class="token-container">
+                    <label>Token No.: </label>
+                    <span id="token-number" class="token-display"></span>
+                </div>
+                <div class="title">
+                    <h3>ADMISSION ENQUIRY FORM</h3>
+                </div>
+                <div class="date-container">
+                    <label>Date: </label>
+                    <span id="enquiry-date" class="date-display"></span>
+                </div>
+            </div>
+        </header>
+        
+        <form id="enquiryForm">
+            <div class="form-group">
+                <label for="studentName">Student Name:</label>
+                <input type="text" id="studentName" name="studentName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fatherName">Father Name:</label>
+                <input type="text" id="fatherName" name="fatherName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="motherName">Mother Name:</label>
+                <input type="text" id="motherName" name="motherName" required>
+            </div>
+            
+            <h3 class="section-heading">Contact Details</h3>
+            
+            <div class="form-group">
+                <label for="studentEmail">Student Email:</label>
+                <input type="email" id="studentEmail" name="studentEmail" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="studentMobile">Student Mobile Number:</label>
+                <input type="tel" id="studentMobile" name="studentMobile" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fatherMobile">Father Mobile Number:</label>
+                <input type="tel" id="fatherMobile" name="fatherMobile" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="motherMobile">Mother Mobile Number:</label>
+                <input type="tel" id="motherMobile" name="motherMobile">
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="reference">Reference:</label>
+                <input type="text" id="reference" name="reference">
+            </div>
+            
+            <div class="form-group">
+                <label for="educationBoard">Education Board:</label>
+                <select id="educationBoard" name="educationBoard" required class="form-select">
+                    <option value="">-- Select Board --</option>
+                    <option value="CBSE">CBSE</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="AP/Telangana">Andhra Pradesh/Telangana</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <div id="marks11thSection" class="form-group marks" style="display: none;">
+                <label>11<sup>th</sup> Standard Marks: <span class="required-note">(For Andhra Pradesh/Telangana students only)</span></label>
+                <div class="marks-fields">
+                    <div class="marks-field">
+                        <label for="physics11">Physics:</label>
+                        <input type="number" id="physics11" name="physics11">
+                    </div>
+                    <div class="marks-field">
+                        <label for="mathematics11">Mathematics:</label>
+                        <input type="number" id="mathematics11" name="mathematics11">
+                    </div>
+                    <div class="marks-field">
+                        <label for="chemistry11">Chemistry:</label>
+                        <input type="number" id="chemistry11" name="chemistry11">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group marks">
+                <label>12<sup>th</sup> Standard: <span class="required-note">(Physics, Chemistry, and Mathematics are mandatory)</span></label>
+                <div class="marks-fields">
+                    <div class="marks-field">
+                        <label for="physics">Physics:</label>
+                        <input type="number" id="physics" name="physics" required>
+                    </div>
+                    <div class="marks-field">
+                        <label for="mathematics">Mathematics:</label>
+                        <input type="number" id="mathematics" name="mathematics" required>
+                    </div>
+                    <div class="marks-field">
+                        <label for="chemistry">Chemistry:</label>
+                        <input type="number" id="chemistry" name="chemistry" required>
+                    </div>
+                    <div class="marks-field">
+                        <label for="cs">CS: <span class="optional-note">(Optional)</span></label>
+                        <input type="number" id="cs" name="cs">
+                    </div>
+                    <div class="marks-field">
+                        <label for="bio">BIO: <span class="optional-note">(Optional)</span></label>
+                        <input type="number" id="bio" name="bio">
+                    </div>
+                    <div class="marks-field">
+                        <label for="ece">ECE: <span class="optional-note">(Optional)</span></label>
+                        <input type="number" id="ece" name="ece">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="totalPercentage">Total Percentage:</label>
+                <input type="number" step="0.01" id="totalPercentage" name="totalPercentage" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pcmPercentage">PCM Percentage:</label>
+                <input type="number" step="0.01" id="pcmPercentage" name="pcmPercentage" required>
+            </div>
+            
+            <div class="form-group entrance-exam">
+                <label>Entrance Exam Detail:</label>
+                <div class="entrance-fields">
+                    <div class="entrance-field">
+                        <label for="jeeRank">JEE Rank:</label>
+                        <input type="number" id="jeeRank" name="jeeRank">
+                    </div>
+                    <div class="entrance-field">
+                        <label for="comedk">COMEDK Rank:</label>
+                        <input type="number" id="comedk" name="comedk">
+                    </div>
+                    <div class="entrance-field">
+                        <label for="cetRank">CET Rank:</label>
+                        <input type="number" id="cetRank" name="cetRank">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group course-preference">
+                <label>Course Preference Order: <span class="required-note">(Select courses in order of preference)</span></label>
+                <div class="preference-instruction">
+                    <p><i class="fas fa-info-circle"></i> Click on courses in order of your preference. The first course you select will be your first preference.</p>
+                </div>
+                <div id="course-selection" class="course-selection-list">
+                    <div class="course-option">
+                        <input type="checkbox" id="course1" name="coursePreference[]" value="BE Computer Science and Engineering" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course1">BE Computer Science and Engineering</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course2" name="coursePreference[]" value="BE Computer Science and Engineering (Artificial Intelligence)" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course2">BE Computer Science and Engineering (Artificial Intelligence)</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course3" name="coursePreference[]" value="BE Computer Science and Engineering (Data Science)" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course3">BE Computer Science and Engineering (Data Science)</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course4" name="coursePreference[]" value="BE Computer Science and Engineering (Cyber Security)" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course4">BE Computer Science and Engineering (Cyber Security)</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course5" name="coursePreference[]" value="BE Information Science and Engineering" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course5">BE Information Science and Engineering</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course6" name="coursePreference[]" value="BE Electronics and Communication Engineering" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course6">BE Electronics and Communication Engineering</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course7" name="coursePreference[]" value="BE Electrical and Electronics Engineering" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course7">BE Electrical and Electronics Engineering</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course8" name="coursePreference[]" value="BE Mechanical Engineering" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course8">BE Mechanical Engineering</label>
+                    </div>
+                    <div class="course-option">
+                        <input type="checkbox" id="course9" name="coursePreference[]" value="BE Civil Engineering" class="course-checkbox">
+                        <div class="preference-indicator"></div>
+                        <label for="course9">BE Civil Engineering</label>
+                    </div>
+                </div>
+            </div>
+            
+
+            
+            <div class="form-actions">
+                <button type="submit" id="submitBtn">Submit</button>
+                <button type="button" id="resetBtn">Reset</button>
+            </div>
+        </form>
+    </div>
+    
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Form Submitted Successfully!</h2>
+            <p>Thank you for your enquiry. We will get back to you soon.</p>
+            <p>Your token number: <span id="tokenNumber"></span></p>
+            <button id="printFormBtn">Print Form</button>
+        </div>
+    </div>
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Config file with Supabase credentials -->
+    <script src="supabase-config.js"></script>
+    <!-- Database setup script -->
+    <script src="db-setup.js"></script>
+    <!-- Main script file -->
+    <script src="script.js"></script>
+</body>
+</html>

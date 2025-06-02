@@ -1,0 +1,289 @@
+/* Enhanced Aesthetic 3D Loader styling */
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a1929 0%, #213858 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease-out, visibility 0.8s;
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+/* 3D Animated background elements */
+.loader-container::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(65, 147, 239, 0.3) 0%, rgba(35, 71, 129, 0) 70%);
+    animation: pulse-bg 6s infinite ease-in-out;
+    transform-style: preserve-3d;
+    transform: translateZ(-50px);
+}
+
+/* Floating 3D elements background */
+@keyframes float-element {
+    0% { transform: translate3d(0, 0, 0) rotate3d(1, 1, 1, 0deg); }
+    50% { transform: translate3d(20px, -15px, 30px) rotate3d(1, 1, 1, 180deg); }
+    100% { transform: translate3d(0, 0, 0) rotate3d(1, 1, 1, 360deg); }
+}
+
+/* Create multiple floating 3D elements */
+.loader-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpolygon fill='%234193ef' points='50,15 75,30 75,70 50,85 25,70 25,30'/%3E%3C/svg%3E") 0 0 / 100px 100px repeat;
+    opacity: 0.1;
+    animation: floating-bg 15s linear infinite;
+}
+
+/* 3D grid on the floor */
+.loader-floor {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    bottom: -100px;
+    background-image: linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px), 
+                      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    transform: rotateX(60deg) scale3d(1, 1.5, 1);
+    transform-style: preserve-3d;
+    animation: floor-animation 8s linear infinite;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    transform-style: preserve-3d;
+    transform: translateZ(50px);
+}
+
+/* Much bigger logo with 3D effect */
+.loader-logo {
+    width: 280px;
+    height: auto;
+    margin-bottom: 30px;
+    animation: floating-3d 3s infinite ease-in-out;
+    filter: drop-shadow(0 10px 25px rgba(65, 147, 239, 0.4));
+    transition: transform 0.3s;
+    transform-style: preserve-3d;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2), 0 0 30px rgba(65, 147, 239, 0.3);
+}
+
+.loader-logo:hover {
+    transform: scale(1.05) rotateY(10deg);
+}
+
+.loader-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 22px;
+    color: #ffffff;
+    margin-top: 20px;
+    font-weight: bold;
+    text-shadow: 0 2px 15px rgba(65, 147, 239, 0.6);
+    animation: fade-in-up 0.5s ease-out forwards, glow 2s infinite alternate;
+    opacity: 0;
+    transform: translateY(20px);
+    letter-spacing: 1px;
+}
+
+.loader-text:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.loader-text:nth-child(4) {
+    animation-delay: 0.4s;
+    font-size: 18px;
+    color: #4193ef;
+}
+
+/* 3D Spinner with holographic effect */
+.loader-spinner {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 30px 0;
+    transform-style: preserve-3d;
+    perspective: 800px;
+}
+
+.loader-spinner::before,
+.loader-spinner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 6px solid transparent;
+    box-shadow: 0 0 20px rgba(65, 147, 239, 0.6);
+}
+
+.loader-spinner::before {
+    border-top-color: #4193ef;
+    border-right-color: #4193ef;
+    animation: spin-3d 2s linear infinite;
+    transform: rotateX(60deg) rotateZ(0deg);
+}
+
+.loader-spinner::after {
+    border-bottom-color: #1fe6ff;
+    border-left-color: #1fe6ff;
+    animation: spin-3d-reverse 1.5s linear infinite reverse;
+    transform: rotateX(-60deg) rotateZ(0deg);
+}
+
+/* Holographic Progress dots */
+.progress-dots {
+    display: flex;
+    margin-top: 20px;
+    perspective: 100px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    margin: 0 6px;
+    border-radius: 50%;
+    background-color: #4193ef;
+    box-shadow: 0 0 15px #4193ef, 0 0 30px rgba(65, 147, 239, 0.6);
+    animation: dot-pulse-3d 1.4s infinite ease-in-out;
+    transform-style: preserve-3d;
+}
+
+.dot:nth-child(1) {
+    background-color: #4193ef;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+    background-color: #1fe6ff;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+    background-color: #7161ef;
+}
+
+.loader-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Make sure the content doesn't flash before loader disappears */
+.content-container {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+.content-visible {
+    opacity: 1;
+}
+
+/* Keyframe Animations */
+@keyframes spin-3d {
+    0% { transform: rotateX(60deg) rotateZ(0deg); }
+    100% { transform: rotateX(60deg) rotateZ(360deg); }
+}
+
+@keyframes spin-3d-reverse {
+    0% { transform: rotateX(-60deg) rotateZ(0deg); }
+    100% { transform: rotateX(-60deg) rotateZ(-360deg); }
+}
+
+@keyframes floating-3d {
+    0% {
+        transform: translateY(0px) translateZ(0px) rotateY(0deg);
+        filter: drop-shadow(0 10px 25px rgba(65, 147, 239, 0.4));
+    }
+    50% {
+        transform: translateY(-15px) translateZ(30px) rotateY(5deg);
+        filter: drop-shadow(0 25px 30px rgba(65, 147, 239, 0.6));
+    }
+    100% {
+        transform: translateY(0px) translateZ(0px) rotateY(0deg);
+        filter: drop-shadow(0 10px 25px rgba(65, 147, 239, 0.4));
+    }
+}
+
+@keyframes pulse-bg {
+    0% {
+        transform: scale(1) translateZ(-50px);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.1) translateZ(-30px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1) translateZ(-50px);
+        opacity: 0.3;
+    }
+}
+
+@keyframes floating-bg {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+}
+
+@keyframes floor-animation {
+    0% { transform: rotateX(60deg) translateZ(-50px) scale3d(1, 1.5, 1); }
+    50% { transform: rotateX(60deg) translateZ(-30px) scale3d(1.1, 1.6, 1); }
+    100% { transform: rotateX(60deg) translateZ(-50px) scale3d(1, 1.5, 1); }
+}
+
+@keyframes fade-in-up {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #4193ef, 0 0 20px #4193ef;
+    }
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #4193ef, 0 0 40px #4193ef;
+    }
+}
+
+@keyframes dot-pulse-3d {
+    0%, 100% {
+        transform: scale3d(0.8, 0.8, 1) translateZ(0);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale3d(1.2, 1.2, 1.5) translateZ(10px);
+        opacity: 1;
+        box-shadow: 0 0 20px currentColor, 0 0 40px rgba(65, 147, 239, 0.8);
+    }
+}
+
+/* Make sure the content doesn't flash before loader disappears */
+.content-container {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+.content-visible {
+    opacity: 1;
+}
