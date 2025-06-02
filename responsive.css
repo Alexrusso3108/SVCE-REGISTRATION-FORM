@@ -1,0 +1,171 @@
+/* Responsive styles for SVCE Admission Enquiry Form */
+
+/* Base responsive styles */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 0 auto 20px;
+        max-width: 100%;
+        border-radius: 0;
+    }
+    
+    /* Header adjustments */
+    header {
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .banner img {
+        max-width: 80%;
+        height: auto;
+    }
+    
+    /* Title container for smaller screens */
+    .title-container {
+        flex-direction: column;
+        height: auto;
+        padding: 0;
+        margin-top: 10px;
+        margin-bottom: 25px;
+        gap: 15px;
+    }
+    
+    .title {
+        position: relative;
+        left: 0;
+        transform: none;
+        order: 1;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .title h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .token-container {
+        position: relative;
+        left: 0;
+        justify-content: center;
+        width: 100%;
+        order: 2;
+    }
+    
+    .date-container {
+        position: relative;
+        right: 0;
+        justify-content: center;
+        width: 100%;
+        order: 3;
+    }
+    
+    /* Form adjustments */
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .form-col {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .form-col:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Marks section */
+    .marks-fields {
+        flex-direction: column;
+    }
+    
+    .marks-field {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    /* Preference courses */
+    .preference-courses {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .preference-course {
+        width: 100%;
+    }
+    
+    /* Button adjustments */
+    .form-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-actions button {
+        width: 100%;
+    }
+    
+    /* Print button */
+    .print-button-container {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    #print-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+    
+    .container {
+        padding: 12px;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .title h3 {
+        font-size: 16px;
+    }
+    
+    label, input, select, textarea {
+        font-size: 14px;
+    }
+    
+    .token-display, .date-display {
+        font-size: 14px;
+        padding: 3px 6px;
+    }
+    
+    .token-container label, .date-container label {
+        font-size: 14px;
+    }
+    
+    .required-note {
+        display: block;
+        margin-top: 3px;
+    }
+    
+    /* Adjust loader for mobile */
+    .loader-logo {
+        width: 200px;
+    }
+    
+    .loader-text {
+        font-size: 18px;
+    }
+}
