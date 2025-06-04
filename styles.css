@@ -662,3 +662,207 @@ button:active {
         font-size: 14px;
     }
 }
+
+/* Print Specific Styles */
+@media print {
+    @page {
+        size: A4;
+        margin: 8mm 10mm; /* Reduced page margins */
+    }
+
+    body {
+        background-color: #fff !important;
+        color: #000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: 8pt !important; /* Aggressively reduced base font */
+        line-height: 1.1 !important; /* Aggressively reduced line height */
+        -webkit-print-color-adjust: exact !important; /* Ensures background colors/images print in Chrome/Safari */
+        print-color-adjust: exact !important;
+    }
+
+    .loader-container,
+    header .banner, /* Hides the main logo banner */
+    .print-button-container,
+    #successModal,
+    .modal, /* Hide all modals */
+    .preference-instruction i, /* Hide info icon in preferences */
+    .preference-instruction p, /* Hide the whole instruction paragraph */
+    .optional-note, /* Hide (Optional) text */
+    .required-note, /* Hide (Required) text */
+    .loader-floor, /* Hide loader floor */
+    .loader-content .loader-logo, /* Hide loader logo specifically if not covered by .loader-container */
+    .loader-spinner, /* Hide spinner specifically */
+    .progress-dots /* Hide progress dots */
+    {
+        display: none !important;
+    }
+
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 2mm !important; /* Minimal container padding within @page margins */
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        border-top: none !important;
+        border: none !important; /* Remove any container border */
+    }
+
+    header {
+        text-align: left !important; /* Align header content to left */
+        margin-bottom: 6px !important; /* Minimal margin */
+        padding-bottom: 2px !important; /* Minimal padding */
+        border-bottom: 1px solid #ccc !important;
+    }
+
+    .title-container {
+        margin-top: 0 !important;
+        margin-bottom: 6px !important; /* Minimal margin */
+        padding: 0 !important; /* Remove padding */
+        height: auto !important;
+        display: flex !important; /* Ensure flex for alignment */
+        justify-content: space-between !important;
+        align-items: center !important; /* Vertically align items */
+    }
+
+    .title {
+        position: static !important; /* Remove absolute positioning */
+        transform: none !important;
+        text-align: center !important; /* Center title text */
+        flex-grow: 1; /* Allow title to take available space */
+    }
+    
+    .title h3 {
+        font-size: 11pt !important; /* Minimal title size */
+        font-weight: bold !important;
+    }
+
+    .token-container,
+    .date-container {
+        position: static !important; /* Remove absolute positioning */
+        font-size: 8pt !important; /* Reduced */
+        gap: 3px !important;
+        height: auto !important;
+        padding: 2px 0;
+    }
+
+    .token-container label,
+    .date-container label,
+    .token-display,
+    .date-display {
+        font-size: 8pt !important; /* Reduced */
+        padding: 2px 4px !important;
+        background-color: #fff !important; /* Ensure no background color for print */
+        border: 1px solid #ddd !important; /* Light border for clarity */
+    }
+
+    .form-group {
+        margin-bottom: 1px !important; /* Barely any space */
+        padding: 0 !important;
+        border-bottom: none !important; /* Remove any bottom border for print */
+    }
+
+    label {
+        font-size: 7pt !important; /* Aggressively reduced label font */
+        margin-bottom: 0px !important; /* Minimal space */
+        line-height: 1.0 !important; /* Minimal line height */
+        font-weight: bold !important;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+        font-size: 7pt !important; /* Aggressively reduced input font */
+        padding: 1px 2px !important; /* Minimal padding */
+        line-height: 1.0 !important; /* Minimal line height */
+        margin-bottom: 0 !important; /* Remove margin from inputs themselves */
+        border: 1px solid #bbb !important; /* Ensure borders are visible */
+        background-color: #fff !important; /* Ensure white background */
+        box-shadow: none !important;
+        border-radius: 2px !important; /* Slight radius for print */
+    }
+    
+    select {
+        -webkit-appearance: none !important; /* Remove default select styling for Chrome/Safari */
+        -moz-appearance: none !important; /* Remove default select styling for Firefox */
+        appearance: none !important;
+        padding-right: 20px !important; /* Add space for custom arrow if needed */
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E') !important;
+        background-repeat: no-repeat !important;
+        background-position: right 5px center !important;
+        background-size: 8px 8px !important; /* Smaller arrow */
+    }
+
+    textarea {
+        min-height: 12px !important; /* Extremely reduced textarea height */
+        resize: none !important; /* Disable resizing for print */
+        line-height: 1.3 !important;
+    }
+
+    .marks-fields {
+        gap: 2px !important; /* Aggressively reduce gap */
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important; /* Aggressively compact */
+    }
+
+    .marks-field label {
+        font-size: 5pt !important; /* Barely legible, last resort */
+        line-height: 1.0 !important;
+    }
+
+    .marks-field input[type="number"] {
+        padding: 0px 1px !important; /* Almost no padding */
+        font-size: 5pt !important; /* Barely legible, last resort */
+    }
+
+    .course-preference-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important; /* Adjusted for legibility */
+        gap: 3px !important; /* Reduced */
+    }
+
+    .course-checkbox-label {
+        font-size: 6pt !important; /* Aggressively reduced */
+        padding: 1px 2px !important; /* Minimal padding */
+        line-height: 1.1 !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    .course-checkbox-label .preference-indicator {
+        display: inline-block !important; /* Ensure indicator is visible */
+        font-size: 6pt !important; /* Reduced */
+        width: 14px !important; /* Reduced */
+        height: 14px !important; /* Reduced */
+        line-height: 14px !important; /* Reduced */
+        margin-left: 3px !important; /* Reduced */
+        background-color: #eee !important;
+        color: #000 !important;
+        border-radius: 50% !important;
+    }
+
+    button[type="submit"],
+    button[type="reset"] {
+        display: none !important; /* Hide submit and reset buttons */
+    }
+
+    /* Ensure all content is visible */
+    * {
+        overflow: visible !important;
+        box-shadow: none !important; /* Remove all shadows for print */
+    }
+
+    /* Attempt to keep sections from breaking across pages if it were longer */
+    .form-group, .section-heading {
+        page-break-inside: avoid !important;
+    }
+
+    .section-heading {
+        font-size: 8pt !important; /* Aggressively Reduced */
+        margin-top: 2px !important; /* Minimal margin */
+        margin-bottom: 1px !important; /* Minimal margin */
+        padding-bottom: 0px !important; /* No padding */
+        border-bottom: 0.5pt solid #f0f0f0 !important; /* Very faint border or none */
+    }
+}

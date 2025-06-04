@@ -199,6 +199,61 @@
 }
 
 /* Keyframe Animations */
+
+/* 3D Pyramid Loader Styles */
+.pyramid-loader {
+    position: absolute;
+    width: 50px; /* Pyramid base edge length */
+    height: 50px; /* Pyramid base edge length */
+    top: 50%;
+    left: 50%;
+    transform-style: preserve-3d;
+    /* Static transform for positioning + initial animation state */
+    transform: translate(-50%, -50%) translateY(-20px) rotateY(0deg) rotateX(15deg);
+    animation: spin-pyramid 7s infinite linear;
+}
+
+.pyramid-face {
+    position: absolute;
+    width: 50px;  /* Base of the triangle face */
+    height: 47px; /* Slant height of the triangle face (calculated for H=40, BaseEdge=50) */
+    /* Center the div before applying clip-path and transforms */
+    top: calc(50% - 47px / 2);
+    left: calc(50% - 50px / 2);
+    background-color: rgba(255, 215, 0, 0.75); /* Gold with transparency */
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* Triangle pointing up, base at bottom */
+    transform-origin: center bottom; /* Rotate around the center of the base of the triangle */
+}
+
+/* Positioning and rotating each face to form the pyramid */
+/* Angle for rotateX is ~58 degrees (for H=40, Apothem=25) */
+.pyramid-face.front {
+    transform: rotateY(0deg) translateZ(25px) rotateX(58deg);
+}
+
+.pyramid-face.back {
+    transform: rotateY(180deg) translateZ(25px) rotateX(58deg);
+}
+
+.pyramid-face.left {
+    transform: rotateY(-90deg) translateZ(25px) rotateX(58deg);
+}
+
+.pyramid-face.right {
+    transform: rotateY(90deg) translateZ(25px) rotateX(58deg);
+}
+
+/* Animation for the pyramid container */
+@keyframes spin-pyramid {
+    0% {
+        transform: translate(-50%, -50%) translateY(-20px) rotateY(0deg) rotateX(15deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) translateY(-20px) rotateY(360deg) rotateX(15deg);
+    }
+}
+
+/* Original Keyframe Animations Follow */
 @keyframes spin-3d {
     0% { transform: rotateX(60deg) rotateZ(0deg); }
     100% { transform: rotateX(60deg) rotateZ(360deg); }
