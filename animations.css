@@ -1,0 +1,19 @@
+@keyframes subtle-grid-animation {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 1200px 1200px; /* Adjust for desired speed and seamless loop with 40px grid */
+    }
+}
+
+@keyframes soft-glow-animation {
+    0% {
+        opacity: 0.5; /* Increased base opacity */
+        transform: scale(1.0);
+    }
+    100% {
+        opacity: 0.85; /* Increased max opacity */
+        transform: scale(1.1);
+    }
+}

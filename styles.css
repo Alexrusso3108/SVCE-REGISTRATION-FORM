@@ -5,21 +5,74 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+#constellation-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -3; /* Behind other pseudo-elements */
+    pointer-events: none; /* Ensure it doesn't interfere with interactions */
+}
+
 body {
-    background-color: #f0f2f5;
+    background-color: #eef1f5; /* Slightly richer off-white */
     color: #333;
     line-height: 1.6;
     padding: 20px 0;
+    position: relative; /* For pseudo-element positioning */
+    overflow-x: hidden; /* Prevent horizontal scroll from animations */
+}
+
+body::before {
+    pointer-events: none; /* Ensure pseudo-elements don't intercept mouse events */
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* Behind the grid pseudo-element */
+    background-image:
+        radial-gradient(circle at 15% 25%, rgba(66, 133, 244, 0.18), transparent 40%), /* Increased opacity and spread */
+        radial-gradient(circle at 85% 75%, rgba(120, 150, 255, 0.15), transparent 45%); /* Increased opacity and spread */
+    animation: soft-glow-animation 30s ease-in-out infinite alternate;
+    pointer-events: none; /* Ensure pseudo-elements don't intercept mouse events */
+}
+
+body::before {
+    content: '';
+    position: fixed; /* Fixed to viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(66, 133, 244, 0.12) 1px, transparent 1px), /* Bolder grid lines */
+        linear-gradient(90deg, rgba(66, 133, 244, 0.12) 1px, transparent 1px); /* Bolder grid lines */
+    background-size: 35px 35px;
+    z-index: -1; /* Behind all content */
+    animation: subtle-grid-animation 70s linear infinite;
+    opacity: 0.75; /* Increased overall opacity of the grid layer */
+    transform-style: preserve-3d;
+    transform: perspective(600px) rotateX(0deg) translateZ(-150px);
 }
 
 .container {
     max-width: 850px;
-    margin: 0 auto 40px;
+    margin: 40px auto; /* Added top margin for better spacing with animated bg */
     padding: 30px;
     background-color: white;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.08), 0 5px 15px rgba(0, 0, 0, 0.05); /* Softer, more modern shadow */
     border-radius: 12px;
-    border-top: 5px solid #4285f4;
+    border-top: 4px solid transparent;
+    border-image: linear-gradient(to right, #4a90e2, #50e3c2, #4285f4);
+    border-image-slice: 1;
+    position: relative; /* Ensure it's above the body's pseudo-element if z-index issues arise */
+    z-index: 1;
 }
 
 header {
@@ -80,10 +133,11 @@ header {
 }
 
 .title h3 {
-    font-size: 22px;
+    font-size: 24px; /* Slightly larger */
     margin: 0;
-    color: #333;
+    color: #2c3e50; /* A deeper, more modern slate gray */
     font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .token-container {
@@ -201,10 +255,10 @@ form {
 .section-heading {
     font-size: 18px;
     color: #4285f4;
-    margin-top: 10px;
+    margin-top: 25px; /* Increased top margin for better separation */
     margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e8eaed;
+    padding-bottom: 8px; /* Adjusted padding for thinner border */
+    border-bottom: 1px solid #e0e0e0; /* Lighter and thinner border */
     font-weight: 600;
 }
 
@@ -265,28 +319,53 @@ label {
 }
 
 input[type="text"],
-input[type="tel"],
 input[type="email"],
+input[type="tel"],
 input[type="number"],
-textarea,
-select.form-select {
+textarea {
+    display: block;
     width: 100%;
-    padding: 12px;
-    border: 2px solid #dadce0;
-    border-radius: 8px;
+    padding: 10px 12px;
     font-size: 15px;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da; /* Standard clearer border */
+    border-radius: 6px; /* Slightly more rounded */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
 input[type="text"]:focus,
-input[type="tel"]:focus,
 input[type="email"]:focus,
+input[type="tel"]:focus,
 input[type="number"]:focus,
-textarea:focus,
+textarea:focus {
+    border-color: #8ab4f8; /* Lighter blue for focus border */
+    outline: 0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075), 0 0 0 0.2rem rgba(66, 133, 244, 0.25); /* Standard Bootstrap-like focus */
+}
+
+select.form-select {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da; /* Standard clearer border */
+    border-radius: 6px; /* Slightly more rounded */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
 select.form-select:focus {
-    border-color: #4285f4;
-    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
-    outline: none;
+    border-color: #8ab4f8; /* Lighter blue for focus border */
+    outline: 0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075), 0 0 0 0.2rem rgba(66, 133, 244, 0.25); /* Standard Bootstrap-like focus */
 }
 
 .contact-fields,
@@ -460,24 +539,27 @@ select.form-select:focus {
 }
 
 button {
-    padding: 14px 30px;
+    padding: 12px 24px; /* Adjusted padding */
     background-color: #4285f4;
     color: white;
     border: none;
-    border-radius: 50px;
+    border-radius: 6px; /* Reduced border-radius */
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     min-width: 150px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Consolidated box-shadow */
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.1s ease-in-out; /* Consolidated transition */
 }
 
 button:hover {
-    background-color: #3367d6;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Adjusted generic hover shadow */
+}
+
+button[type="submit"]:hover {
+    background-color: #3367d6; /* Specific hover for submit button */
 }
 
 button:active {
@@ -487,13 +569,13 @@ button:active {
 #resetBtn {
     background-color: #ffffff;
     color: #4285f4;
-    border: 2px solid #4285f4;
+    border: 1px solid #4285f4; /* Refined border */
 }
 
 #resetBtn:hover {
-    background-color: #f8f9fa;
-    color: #3367d6;
-    border-color: #3367d6;
+    background-color: #e8f0fe; /* Light blue background */
+    color: #3367d6; /* Darker blue text */
+    border-color: #3367d6; /* Darker blue border */
 }
 
 .modal {
