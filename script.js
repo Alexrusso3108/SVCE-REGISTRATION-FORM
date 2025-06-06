@@ -203,6 +203,50 @@ document.addEventListener('DOMContentLoaded', function() {
     const optionalOtherUnnamedInput = document.getElementById('other_unnamed_marks_12');
     const optionalEceInput = document.getElementById('ece');
 
+    // Diploma/12th toggle logic
+    const educationalQualificationSelect = document.getElementById('educationalQualification');
+    const diplomaFields = document.getElementById('diplomaFields');
+    // Use the already declared educationBoardSelect above
+    // All marks and rank fields to disable for Diploma
+    const marksAndRankFieldSelectors = [
+        '#educationBoard',
+        '#physics', '#physics12Practical', '#chemistry', '#chemistry12Practical',
+        '#mathematics', '#mathematics12a', '#mathematics12b',
+        '#cs', '#bio', '#ece',
+        '#kannada_marks_12', '#english_marks_12', '#other_subject_name_12', '#other_subject_marks_12', '#other_unnamed_marks_12',
+        '#totalPercentage', '#pcmPercentage',
+        '#jeeRank', '#cetRank', '#comedkRank', '#kcetRank', '#neetRank',
+        '#physics11', '#physics11Practical', '#chemistry11', '#chemistry11Practical', '#mathematics11a', '#mathematics11b'
+    ];
+    function handleEducationalQualificationChange() {
+        if (!educationalQualificationSelect) return;
+        const value = educationalQualificationSelect.value;
+        if (value === 'Diploma') {
+            if (diplomaFields) diplomaFields.style.display = '';
+            marksAndRankFieldSelectors.forEach(sel => {
+                const el = document.querySelector(sel);
+                if (el) {
+                    el.disabled = true;
+                    if (el.closest('.form-group')) el.closest('.form-group').style.opacity = 0.5;
+                }
+            });
+        } else {
+            if (diplomaFields) diplomaFields.style.display = 'none';
+            marksAndRankFieldSelectors.forEach(sel => {
+                const el = document.querySelector(sel);
+                if (el) {
+                    el.disabled = false;
+                    if (el.closest('.form-group')) el.closest('.form-group').style.opacity = 1;
+                }
+            });
+        }
+    }
+    if (educationalQualificationSelect) {
+        educationalQualificationSelect.addEventListener('change', handleEducationalQualificationChange);
+        // Run on load in case of autofill
+        setTimeout(handleEducationalQualificationChange, 0);
+    }
+
     if (optionalCsInput && optionalBioInput && optionalEceInput) { // Ensure all elements are found before proceeding
         function updateOptionalMarksLogic() {
             const csHasValue = optionalCsInput.value.trim() !== '';
@@ -385,72 +429,31 @@ function handleExclusiveOptionalSubjectChange(changedInputId) {
         otherUnnamed: otherUnnamedMarksInput
     };
 
-    const clearAndDisable = (inputField) => {
-        if (inputField) {
-            inputField.disabled = true;
-            inputField.value = '';
-            if (typeof clearFieldError === 'function') clearFieldError(inputField);
-        }
-    };
+    const allInputs = [inputs.kannada, inputs.english, inputs.otherUnnamed];
 
-    const enableInput = (inputField) => {
-        if (inputField) {
-            inputField.disabled = false;
-        }
-    };
+    // Get current values
+    const values = allInputs.map(input => input && typeof input.value === 'string' && input.value.trim() !== '');
+    const filledCount = values.filter(Boolean).length;
 
-    const changedElement = document.getElementById(changedInputId);
-    const hasValue = changedElement && typeof changedElement.value === 'string' && changedElement.value.trim() !== '';
-
-    if (changedInputId === 'kannada_marks_12') {
-        if (hasValue) {
-            clearAndDisable(inputs.english);
-            clearAndDisable(inputs.otherUnnamed);
-        } else { // Kannada cleared, enable others
-            enableInput(inputs.english);
-            // Enable otherUnnamed only if English is also empty
-            if (!inputs.english?.value?.trim() && !inputs.otherUnnamed?.disabled) {
-                enableInput(inputs.otherUnnamed);
+    // If two are filled, disable the remaining one
+    if (filledCount === 2) {
+        allInputs.forEach((input, idx) => {
+            if (!values[idx]) {
+                input.disabled = true;
+                input.value = '';
+            } else {
+                input.disabled = false;
             }
-        }
-    } else if (changedInputId === 'english_marks_12') {
-        if (hasValue) {
-            clearAndDisable(inputs.kannada);
-            clearAndDisable(inputs.otherUnnamed);
-        } else { // English cleared, enable others
-            enableInput(inputs.kannada);
-            // Enable otherUnnamed only if Kannada is also empty
-            if (!inputs.kannada?.value?.trim() && !inputs.otherUnnamed?.disabled) {
-                enableInput(inputs.otherUnnamed);
-            }
-        }
-    } else if (changedInputId === 'other_unnamed_marks_12') {
-        const otherUnnamedHasValue = inputs.otherUnnamed && typeof inputs.otherUnnamed.value === 'string' && inputs.otherUnnamed.value.trim() !== '';
-        if (otherUnnamedHasValue) {
-            clearAndDisable(inputs.kannada);
-            clearAndDisable(inputs.english);
-        } else { // Other (unnamed) cleared, enable others if they are also clear
-            if (!(inputs.kannada?.value?.trim() || inputs.english?.value?.trim())) {
-                enableInput(inputs.kannada);
-                enableInput(inputs.english);
-            }
-        }
+        });
+    } else {
+        // If fewer than two are filled, enable all
+        allInputs.forEach(input => {
+            input.disabled = false;
+        });
     }
-    
-    // Ensure all fields are re-enabled if all three groups are empty
-    // This handles the case where a user clears one field, then another, then the last one.
-    const kannadaHasValue = inputs.kannada && typeof inputs.kannada.value === 'string' && inputs.kannada.value.trim() !== '';
-    const englishHasValue = inputs.english && typeof inputs.english.value === 'string' && inputs.english.value.trim() !== '';
-    const otherUnnamedHasValue = inputs.otherUnnamed && typeof inputs.otherUnnamed.value === 'string' && inputs.otherUnnamed.value.trim() !== '';
-
-    if (!kannadaHasValue && !englishHasValue && !otherUnnamedHasValue) {
-        enableInput(inputs.kannada);
-        enableInput(inputs.english);
-        enableInput(inputs.otherUnnamed);
-    }
-
     if (typeof calculatePercentages === 'function') calculatePercentages(); // Recalculate after any change
 }
+
 
 function calculatePercentages() {
         const educationBoard = educationBoardSelect ? educationBoardSelect.value : '';
@@ -751,13 +754,19 @@ function calculatePercentages() {
                     chemistry_marks_12_practical: (currentBoard === 'AP/Telangana' && chemistry12PracticalInput.value) ? parseFloat(chemistry12PracticalInput.value) : null,
                                         
                     // Entrance exam details (from formDataObj as before)
-                    jee_rank: formDataObj.jeeRank ? parseInt(formDataObj.jeeRank) : null,
-                    comedk_rank: formDataObj.comedk ? parseInt(formDataObj.comedk) : null,
-                    cet_rank: formDataObj.cetRank ? parseInt(formDataObj.cetRank) : null,
+                    jee_rank: formDataObj.jeeRank ? String(formDataObj.jeeRank) : null,
+                    comedk_rank: formDataObj.comedk ? String(formDataObj.comedk) : null,
+                    cet_rank: formDataObj.cetRank ? String(formDataObj.cetRank) : null,
                     
                     // Course preferences as JSON
-                    course_preferences: coursePreferencesDict
+                    course_preferences: coursePreferencesDict,
+
+                    // Diploma-specific fields
+                    educational_qualification: formDataObj.educationalQualification || null,
+                    diploma_percentage: formDataObj.diplomaPercentage ? parseFloat(formDataObj.diplomaPercentage) : null,
+                    dcet_rank: formDataObj.dcetRank ? String(formDataObj.dcetRank) : null
                 };
+
                 
                 console.log('Submitting main form data:', enquiryData);
                 
@@ -772,10 +781,13 @@ function calculatePercentages() {
                     
                     if (enquiryError) {
                         console.error('Error details:', enquiryError);
-                        alert(`Error inserting data: ${enquiryError.message || 'Unknown error'}
-Code: ${enquiryError.code || 'No code'}
-Details: ${JSON.stringify(enquiryError.details) || 'No details'}`);
+                        alert(`Error inserting data: ${enquiryError.message || 'Unknown error'}\nCode: ${enquiryError.code || 'No code'}\nDetails: ${JSON.stringify(enquiryError.details) || 'No details'}`);
                         throw enquiryError;
+                    }
+
+                    // Send confirmation email to student
+                    if (formDataObj.studentEmail && finalTokenNumber) {
+                        sendConfirmationEmail(formDataObj.studentEmail, formDataObj.studentName, finalTokenNumber);
                     }
                 } catch (err) {
                     console.error('Caught error:', err);
@@ -989,12 +1001,62 @@ function validateIndianPhoneNumber(inputElement, fieldName) {
     return true;
 }
 
+// Send a confirmation email to the student after successful registration
+function sendConfirmationEmail(studentEmail, studentName, tokenNumber) {
+    emailjs.send("service_m81m0jq", "template_4d2nobg", {
+        to_email: studentEmail,   // matches {{to_email}} in your template
+        name: studentName,        // matches {{name}} in your template
+        token_number: tokenNumber // if you add {{token_number}} to your template
+    })
+    .then(function(response) {
+        console.log('SUCCESS! Confirmation email sent:', response.status, response.text);
+    }, function(error) {
+        console.error('FAILED to send confirmation email...', error);
+        alert('Registration saved, but failed to send confirmation email. Please contact the office if you do not receive an email.');
+    });
+}
+
 // Form validation
-    function validateForm() {
+function validateForm() {
         let isValid = true;
         updateMarksFieldsBasedOnBoard(); // Ensure 'required' attributes are current
 
         const educationBoard = educationBoardSelect ? educationBoardSelect.value : '';
+        const educationalQualification = educationalQualificationSelect ? educationalQualificationSelect.value : '';
+
+        // If Diploma, skip required validation for 12th/11th marks and board fields
+        if (educationalQualification === 'Diploma') {
+            // List of all 12th/11th marks and board selectors (update as needed)
+            const skipSelectors = [
+                '#educationBoard', '#physics', '#chemistry', '#mathematics',
+                '#mathematics12a', '#mathematics12b', '#physics11', '#mathematics11a', '#mathematics11b', '#chemistry11',
+                '#physics11Practical', '#chemistry11Practical', '#physics12Practical', '#chemistry12Practical',
+                '#pcmPercentage', '#totalPercentage'
+            ];
+            skipSelectors.forEach(sel => {
+                const el = document.querySelector(sel);
+                if (el) {
+                    clearFieldError(el);
+                }
+            });
+            // Only validate diploma fields
+            const diplomaPercentageInput = document.getElementById('diplomaPercentage');
+            const dcetRankInput = document.getElementById('dcetRank');
+            if (!diplomaPercentageInput.value.trim()) {
+                isValid = false;
+                displayFieldError(diplomaPercentageInput, 'Diploma Percentage is required.');
+            } else {
+                clearFieldError(diplomaPercentageInput);
+            }
+            if (!dcetRankInput.value.trim()) {
+                isValid = false;
+                displayFieldError(dcetRankInput, 'DCET Rank is required.');
+            } else {
+                clearFieldError(dcetRankInput);
+            }
+            // Skip rest of validation
+            return isValid;
+        }
 
         // --- Generic validation for fields marked as 'required' ---
         const requiredInputs = enquiryForm.querySelectorAll('[required]');
@@ -1013,14 +1075,30 @@ function validateIndianPhoneNumber(inputElement, fieldName) {
         const fatherMobileInput = document.getElementById('fatherMobile');
         const motherMobileInput = document.getElementById('motherMobile');
 
-        if (studentMobileInput && studentMobileInput.value.trim()) {
-            isValid = validateIndianPhoneNumber(studentMobileInput, 'Student Mobile Number') && isValid;
-        }
-        if (fatherMobileInput && fatherMobileInput.value.trim()) {
-            isValid = validateIndianPhoneNumber(fatherMobileInput, 'Father Mobile Number') && isValid;
-        }
-        if (motherMobileInput && motherMobileInput.value.trim()) {
-            isValid = validateIndianPhoneNumber(motherMobileInput, 'Mother Mobile Number') && isValid;
+        // Phone numbers are fully optional, only validate format if filled
+        const hasStudentMobile = studentMobileInput && studentMobileInput.value.trim();
+        const hasFatherMobile = fatherMobileInput && fatherMobileInput.value.trim();
+        const hasMotherMobile = motherMobileInput && motherMobileInput.value.trim();
+
+        // Require at least one phone number
+        clearFieldError(studentMobileInput);
+        clearFieldError(fatherMobileInput);
+        clearFieldError(motherMobileInput);
+        if (!hasStudentMobile && !hasFatherMobile && !hasMotherMobile) {
+            isValid = false;
+            displayFieldError(studentMobileInput, 'At least one phone number is required.');
+            displayFieldError(fatherMobileInput, 'At least one phone number is required.');
+            displayFieldError(motherMobileInput, 'At least one phone number is required.');
+        } else {
+            if (hasStudentMobile) {
+                isValid = validateIndianPhoneNumber(studentMobileInput, 'Student Mobile Number') && isValid;
+            }
+            if (hasFatherMobile) {
+                isValid = validateIndianPhoneNumber(fatherMobileInput, 'Father Mobile Number') && isValid;
+            }
+            if (hasMotherMobile) {
+                isValid = validateIndianPhoneNumber(motherMobileInput, 'Mother Mobile Number') && isValid;
+            }
         }
 
         // --- Specific Marks Validations ---
@@ -1116,7 +1194,10 @@ function validateIndianPhoneNumber(inputElement, fieldName) {
             console.warn('Course preference section not found in the DOM. Cannot validate preferences.');
             // Optionally, set isValid = false if course preferences are strictly mandatory
             // isValid = false;
-        }
+        }emailjs.send("service_m81m0jq", "template_cuhvuht", {
+            to_email: studentEmail,
+            token_number: tokenNumber
+        })
 
         return isValid;
     }

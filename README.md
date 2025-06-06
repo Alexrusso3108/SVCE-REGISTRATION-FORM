@@ -26,6 +26,3 @@ This is a web-based student enquiry form for SVCE (SRI VENKATESWARA COLLEGE OF E
 - `styles.css` - CSS styling for the form
 - `script.js` - JavaScript for form functionality
 - `logo.png` - SVCE logo image
-
-## Technical Details
-This is a client-side application that stores form data in the browser's localStorage for demonstration purposes. In a production environment, you would want to connect this to a server for proper data storage.

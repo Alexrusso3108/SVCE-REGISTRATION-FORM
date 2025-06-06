@@ -85,12 +85,12 @@
             
             <div class="form-group">
                 <label for="studentMobile">Student Mobile Number:</label>
-                <input type="tel" id="studentMobile" name="studentMobile" required maxlength="10">
+                <input type="tel" id="studentMobile" name="studentMobile" maxlength="10">
             </div>
             
             <div class="form-group">
                 <label for="fatherMobile">Father Mobile Number:</label>
-                <input type="tel" id="fatherMobile" name="fatherMobile" required maxlength="10">
+                <input type="tel" id="fatherMobile" name="fatherMobile" maxlength="10">
             </div>
             
             <div class="form-group">
@@ -106,6 +106,26 @@
             <div class="form-group">
                 <label for="reference">Reference:</label>
                 <input type="text" id="reference" name="reference">
+            </div>
+
+            <div class="form-group">
+                <label for="educationalQualification">Educational Qualification:</label>
+                <select id="educationalQualification" name="educationalQualification" class="form-select" required>
+                    <option value="">-- Select Qualification --</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="12th">12th</option>
+                </select>
+            </div>
+
+            <div id="diplomaFields" style="display:none;">
+                <div class="form-group">
+                    <label for="diplomaPercentage">Diploma Percentage:</label>
+                    <input type="number" id="diplomaPercentage" name="diplomaPercentage" min="0" max="100" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dcetRank">DCET Rank:</label>
+                    <input type="text" id="dcetRank" name="dcetRank">
+                </div>
             </div>
             
             <div class="form-group">
@@ -203,7 +223,7 @@
                 
                     <div class="marks-field">
                         <label for="other_unnamed_marks_12">Others: <span class="optional-note">(Optional)</span></label>
-                        <input type="number" id="other_unnamed_marks_12" name="other_unnamed_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
+<input type="number" id="other_unnamed_marks_12" name="other_unnamed_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
                     </div>
                 </div>
             </div>
@@ -223,15 +243,15 @@
                 <div class="entrance-fields">
                     <div class="entrance-field">
                         <label for="jeeRank">JEE Rank:</label>
-                        <input type="number" id="jeeRank" name="jeeRank">
+                        <input type="text" id="jeeRank" name="jeeRank">
                     </div>
                     <div class="entrance-field">
                         <label for="comedk">COMEDK Rank:</label>
-                        <input type="number" id="comedk" name="comedk">
+                        <input type="text" id="comedk" name="comedk">
                     </div>
                     <div class="entrance-field">
                         <label for="cetRank">CET Rank:</label>
-                        <input type="number" id="cetRank" name="cetRank">
+                        <input type="text" id="cetRank" name="cetRank">
                     </div>
                 </div>
             </div>
@@ -313,5 +333,12 @@
     <!-- Main script file -->
     <script src="script.js"></script>
     <script src="constellation.js"></script>
+<script src="constellation.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init("R8kC7SvFiTpTWYpik"); // Your EmailJS user ID
+  })();
+</script>
 </body>
 </html>
