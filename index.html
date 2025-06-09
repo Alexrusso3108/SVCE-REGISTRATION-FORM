@@ -146,18 +146,12 @@
                         <label for="physics11">Physics (Theory):</label>
                         <input type="number" id="physics11" name="physics11">
                     </div>
-                    <div class="marks-field">
-                        <label for="physics11Practical">Physics (Practical):</label>
-                        <input type="number" id="physics11Practical" name="physics11Practical">
-                    </div>
+
                     <div class="marks-field">
                         <label for="chemistry11">Chemistry (Theory):</label>
                         <input type="number" id="chemistry11" name="chemistry11">
                     </div>
-                    <div class="marks-field">
-                        <label for="chemistry11Practical">Chemistry (Practical):</label>
-                        <input type="number" id="chemistry11Practical" name="chemistry11Practical">
-                    </div>
+
                     <div class="marks-field">
                         <label for="mathematics11a">Mathematics (A):</label>
                         <input type="number" id="mathematics11a" name="mathematics11a">
@@ -166,64 +160,79 @@
                         <label for="mathematics11b">Mathematics (B):</label>
                         <input type="number" id="mathematics11b" name="mathematics11b">
                     </div>
+                    <div class="marks-field">
+                        <label for="english_marks_11">English <span class="optional-note">(Optional)</span>:</label>
+                        <input type="number" id="english_marks_11" name="english_marks_11">
+                    </div>
+                    <div class="marks-field">
+                        <label for="language_marks_11">Language <span class="optional-note">(Optional)</span>:</label>
+                        <input type="number" id="language_marks_11" name="language_marks_11">
+                    </div>
                 </div>
             </div>
             
             <div class="form-group marks">
                 <label>12<sup>th</sup> Standard: <span class="required-note">(Physics and Mathematics are mandatory)</span></label>
                 <div class="marks-fields">
-                    <div class="marks-field">
-                        <label for="physics">Physics (Theory):</label>
-                        <input type="number" id="physics" name="physics" required>
-                    </div>
-                    <div class="marks-field" id="physics12Practical_group" style="display: none;">
-                        <label for="physics12Practical">Physics (Practical):</label>
-                        <input type="number" id="physics12Practical" name="physics12Practical">
-                    </div>
-                    <div class="marks-field">
-                        <label for="chemistry">Chemistry (Theory): <span class="optional-note">(Optional)</span></label>
-                        <input type="number" id="chemistry" name="chemistry">
-                    </div>
-                    <div class="marks-field" id="chemistry12Practical_group" style="display: none;">
-                        <label for="chemistry12Practical">Chemistry (Practical):</label>
-                        <input type="number" id="chemistry12Practical" name="chemistry12Practical">
-                    </div>
-                    <div class="marks-field" id="mathematics12_standard_group">
-                        <label for="mathematics">Mathematics:</label>
-                        <input type="number" id="mathematics" name="mathematics" required>
-                    </div>
-                    <div class="marks-field" id="mathematics12a_group" style="display: none;">
-                        <label for="mathematics12a">Mathematics (A):</label>
-                        <input type="number" id="mathematics12a" name="mathematics12a">
-                    </div>
-                    <div class="marks-field" id="mathematics12b_group" style="display: none;">
-                        <label for="mathematics12b">Mathematics (B):</label>
-                        <input type="number" id="mathematics12b" name="mathematics12b">
-                    </div>
-                    <div class="marks-field">
-                        <label for="cs">CS: <span class="optional-note">(Optional)</span></label>
-                        <input type="number" id="cs" name="cs">
-                    </div>
-                    <div class="marks-field">
-                        <label for="bio">BIO: <span class="optional-note">(Optional)</span></label>
-                        <input type="number" id="bio" name="bio">
-                    </div>
-                    <div class="marks-field">
-                        <label for="ece">ECE: <span class="optional-note">(Optional)</span></label>
-                        <input type="number" id="ece" name="ece">
-                    </div>
-                    <div class="marks-field">
-                        <label for="kannada_marks_12">Kannada: <span class="optional-note">(Optional)</span></label>
-                        <input type="number" id="kannada_marks_12" name="kannada_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
-                    </div>
-                    <div class="marks-field">
-                        <label for="english_marks_12">English: <span class="optional-note">(Optional)</span></label>
-                        <input type="number" id="english_marks_12" name="english_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
-                    </div>
-                
-                    <div class="marks-field">
-                        <label for="other_unnamed_marks_12">Others: <span class="optional-note">(Optional)</span></label>
-<input type="number" id="other_unnamed_marks_12" name="other_unnamed_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
+                    <div class="marks-fields marks-fields-12">
+                        <!-- Row 1: Physics, Chemistry, Mathematics -->
+                        <div class="marks-field">
+                            <label for="physics">Physics (Theory):</label>
+                            <input type="number" id="physics" name="physics" required> <!-- Max set by JS -->
+                        </div>
+                        <div class="marks-field">
+                            <label for="chemistry">Chemistry (Theory): <span class="optional-note">(Optional)</span></label>
+                            <input type="number" id="chemistry" name="chemistry"> <!-- Max set by JS -->
+                        </div>
+                        <div class="marks-field" id="mathematics12_standard_group">
+                            <label for="mathematics">Mathematics:</label>
+                            <input type="number" id="mathematics" name="mathematics" required>
+                        </div>
+                        <!-- Hidden practicals and A/B math -->
+                        <div class="marks-field" id="physics12Practical_group" style="display: none;">
+                            <label for="physics12Practical">Physics (Practical):</label>
+                            <input type="number" id="physics12Practical" name="physics12Practical"> <!-- Max set by JS -->
+                        </div>
+                        <div class="marks-field" id="chemistry12Practical_group" style="display: none;">
+                            <label for="chemistry12Practical">Chemistry (Practical):</label>
+                            <input type="number" id="chemistry12Practical" name="chemistry12Practical"> <!-- Max set by JS -->
+                        </div>
+                        <div class="marks-field" id="mathematics12a_group" style="display: none;">
+                            <label for="mathematics12a">Mathematics (A):</label>
+                            <input type="number" id="mathematics12a" name="mathematics12a">
+                        </div>
+                        <div class="marks-field" id="mathematics12b_group" style="display: none;">
+                            <label for="mathematics12b">Mathematics (B):</label>
+                            <input type="number" id="mathematics12b" name="mathematics12b">
+                        </div>
+                        <!-- Row 2: Optionals (CS, BIO, ECE) -->
+                        <div id="cbseKarnatakaOptionals12" class="marks-fields optionals-row">
+                            <div class="marks-field">
+                                <label for="cs">CS: <span class="optional-note">(Optional)</span></label>
+                                <input type="number" id="cs" name="cs">
+                            </div>
+                            <div class="marks-field">
+                                <label for="bio">BIO: <span class="optional-note">(Optional)</span></label>
+                                <input type="number" id="bio" name="bio">
+                            </div>
+                            <div class="marks-field">
+                                <label for="ece">ECE: <span class="optional-note">(Optional)</span></label>
+                                <input type="number" id="ece" name="ece">
+                            </div>
+                        </div>
+                        <!-- Row 3: Kannada, English, Others -->
+                        <div class="marks-field">
+                            <label for="kannada_marks_12">Kannada/Telugu/Sanskrit: <span class="optional-note">(Optional)</span></label>
+                            <input type="number" id="kannada_marks_12" name="kannada_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
+                        </div>
+                        <div class="marks-field">
+                            <label for="english_marks_12">English: <span class="optional-note">(Optional)</span></label>
+                            <input type="number" id="english_marks_12" name="english_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
+                        </div>
+                        <div class="marks-field">
+                            <label for="other_unnamed_marks_12">Others: <span class="optional-note">(Optional)</span></label>
+                            <input type="number" id="other_unnamed_marks_12" name="other_unnamed_marks_12" oninput="handleExclusiveOptionalSubjectChange(this.id)">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -339,6 +348,30 @@
   (function(){
     emailjs.init("R8kC7SvFiTpTWYpik"); // Your EmailJS user ID
   })();
+</script>
+<script>
+// Dynamically set max for Physics/Chemistry Theory/Practical for AP/Telangana
+function setAPTelanganaMaxMarks() {
+    const board = document.getElementById('education_board')?.value;
+    const fields = [
+        {id: 'physics', max: 60},
+        {id: 'chemistry', max: 60},
+        {id: 'physics12Practical', max: 30},
+        {id: 'chemistry12Practical', max: 30},
+    ];
+    fields.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (el) {
+            if (board === 'AP/Telangana') {
+                el.max = f.max;
+            } else {
+                el.removeAttribute('max');
+            }
+        }
+    });
+}
+document.getElementById('education_board')?.addEventListener('change', setAPTelanganaMaxMarks);
+window.addEventListener('DOMContentLoaded', setAPTelanganaMaxMarks);
 </script>
 </body>
 </html>

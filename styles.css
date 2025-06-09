@@ -376,6 +376,39 @@ select.form-select:focus {
     gap: 15px;
 }
 
+.marks-fields-12 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px 20px;
+    margin-bottom: 10px;
+}
+
+.marks-fields-12 > .marks-field {
+    min-width: 0;
+    width: 100%;
+}
+
+/* Optionals row: CS, BIO, ECE in a single row */
+.optionals-row {
+    grid-column: 1 / span 3;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px 20px;
+    margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .marks-fields-12, .optionals-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .marks-fields-12, .optionals-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 .preference-instruction {
     margin-bottom: 15px;
     color: #5f6368;
