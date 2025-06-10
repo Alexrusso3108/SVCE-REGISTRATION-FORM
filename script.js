@@ -549,6 +549,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set max marks for all subjects
         setMaxMarksForSubjects();
+
+        // Dynamically update Physics and Chemistry labels for 12th standard
+        const physicsLabel = document.querySelector('label[for="physics"]');
+        const chemistryLabel = document.querySelector('label[for="chemistry"]');
+        if (physicsLabel && chemistryLabel) {
+            if (selectedBoard === 'AP/Telangana') {
+                physicsLabel.innerHTML = 'Physics (Theory):';
+                chemistryLabel.innerHTML = 'Chemistry (Theory): <span class="optional-note">(Optional)</span>';
+            } else {
+                physicsLabel.innerHTML = 'Physics:';
+                chemistryLabel.innerHTML = 'Chemistry: <span class="optional-note">(Optional)</span>';
+            }
+        }
     }
 
     if (educationBoardSelect) {
@@ -574,226 +587,212 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Function to handle mutually exclusive optional subjects (Kannada, English, Other)
-function handleExclusiveOptionalSubjectChange(changedInputId) {
-    const kannadaMarksInput = document.getElementById('kannada_marks_12');
-    const englishMarksInput = document.getElementById('english_marks_12');
-    const otherUnnamedMarksInput = document.getElementById('other_unnamed_marks_12');
+    function handleExclusiveOptionalSubjectChange(changedInputId) {
+        const kannadaMarksInput = document.getElementById('kannada_marks_12');
+        const englishMarksInput = document.getElementById('english_marks_12');
+        const otherUnnamedMarksInput = document.getElementById('other_unnamed_marks_12');
 
-    const inputs = {
-        kannada: kannadaMarksInput,
-        english: englishMarksInput,
-        otherUnnamed: otherUnnamedMarksInput
-    };
+        const inputs = {
+            kannada: kannadaMarksInput,
+            english: englishMarksInput,
+            otherUnnamed: otherUnnamedMarksInput
+        };
 
-    const allInputs = [inputs.kannada, inputs.english, inputs.otherUnnamed];
+        const allInputs = [inputs.kannada, inputs.english, inputs.otherUnnamed];
 
-    // Get current values
-    const values = allInputs.map(input => input && typeof input.value === 'string' && input.value.trim() !== '');
-    const filledCount = values.filter(Boolean).length;
+        // Get current values
+        const values = allInputs.map(input => input && typeof input.value === 'string' && input.value.trim() !== '');
+        const filledCount = values.filter(Boolean).length;
 
-    // If two are filled, disable the remaining one
-    if (filledCount === 2) {
-        allInputs.forEach((input, idx) => {
-            if (!values[idx]) {
-                input.disabled = true;
-                input.value = '';
-            } else {
+        // If two are filled, disable the remaining one
+        if (filledCount === 2) {
+            allInputs.forEach((input, idx) => {
+                if (!values[idx]) {
+                    input.disabled = true;
+                    input.value = '';
+                } else {
+                    input.disabled = false;
+                }
+            });
+        } else {
+            // If fewer than two are filled, enable all
+            allInputs.forEach(input => {
                 input.disabled = false;
+            });
+        }
+        if (typeof calculatePercentages === 'function') calculatePercentages(); // Recalculate after any change
+    }
+
+    function calculatePercentages() {
+        const educationBoard = educationBoardSelect ? educationBoardSelect.value : '';
+
+        // Helper to get parseFloat or 0, and check if field has a value
+        const getMark = (inputElement) => {
+            if (!inputElement || inputElement.value.trim() === '') return { value: 0, entered: false };
+            const val = parseFloat(inputElement.value);
+            if (isNaN(val) || val < 0) return { value: 0, entered: true };
+            return { value: val, entered: true };
+        };
+
+        let total12Obtained = 0;
+        let total12Max = 0;
+        let pcmPercentageStr = '';
+        let totalPercentageStr = '';
+
+        // Get 12th Standard Marks
+        const physics12Theory = getMark(physicsInput);
+        const chemistry12Theory = getMark(chemistryInput);
+        const mathematics12A = getMark(mathematics12aInput);
+        const mathematics12B = getMark(mathematics12bInput);
+        const mathematics12Std = getMark(mathematics12StandardInput);
+        const physics12Practical = getMark(physics12PracticalInput);
+        const chemistry12Practical = getMark(chemistry12PracticalInput);
+
+        // Get 11th Standard Marks (AP/Telangana specific)
+        const physics11Theory = getMark(physics11Input);
+        const chemistry11Theory = getMark(chemistry11Input);
+        const mathematics11A = getMark(mathematics11aInput);
+        const mathematics11B = getMark(mathematics11bInput);
+
+        // Optional Subjects for PCM best-of calculation (12th)
+        const cs12 = getMark(csInput);
+        const bio12 = getMark(bioInput);
+        const ece12 = getMark(eceInput);
+
+        // Optional 11th standard subjects
+        const english11 = getMark(english11Input);
+        const language11 = getMark(language11Input);
+        // Other optionals for total percentage
+        const kannada12 = getMark(document.getElementById('kannada_marks_12'));
+        const english12 = getMark(document.getElementById('english_marks_12'));
+        const otherUnnamed12 = getMark(document.getElementById('other_unnamed_marks_12'));
+        const kannadaInputElement = document.getElementById('kannada_marks_12');
+        const englishInputElement = document.getElementById('english_marks_12');
+        const otherUnnamedMarksInputElement = document.getElementById('other_unnamed_marks_12');
+
+        // --- PCM and Total Percentage Calculation (AP/Telangana logic) ---
+        if (educationBoard === 'AP/Telangana') {
+            // PCM: Physics (theory+practical, 11th+12th), Chemistry (theory+practical, 11th+12th), Maths A+B (11th+12th)
+            let pcmObtained = 0;
+            let pcmMax = 600;
+            // Physics
+            let phyTotal = 0;
+            if (physics11Theory.entered) phyTotal += physics11Theory.value;
+            if (physics12Theory.entered) phyTotal += physics12Theory.value;
+            if (physics12Practical.entered) phyTotal += physics12Practical.value;
+            // Max for physics: 60 (11th) + 60 (12th theory) + 30 (12th practical) = 150
+            let phyMax = 0;
+            if (physics11Theory.entered) phyMax += 60;
+            if (physics12Theory.entered) phyMax += 60;
+            if (physics12Practical.entered) phyMax += 30;
+            // Chemistry
+            let chemTotal = 0;
+            if (chemistry11Theory.entered) chemTotal += chemistry11Theory.value;
+            if (chemistry12Theory.entered) chemTotal += chemistry12Theory.value;
+            if (chemistry12Practical.entered) chemTotal += chemistry12Practical.value;
+            // Max for chemistry: 60 (11th) + 60 (12th theory) + 30 (12th practical) = 150
+            let chemMax = 0;
+            if (chemistry11Theory.entered) chemMax += 60;
+            if (chemistry12Theory.entered) chemMax += 60;
+            if (chemistry12Practical.entered) chemMax += 30;
+            // Maths
+            let mathTotal = 0;
+            if (mathematics11A.entered) mathTotal += mathematics11A.value;
+            if (mathematics11B.entered) mathTotal += mathematics11B.value;
+            if (mathematics12A.entered) mathTotal += mathematics12A.value;
+            if (mathematics12B.entered) mathTotal += mathematics12B.value;
+            // Max for maths: 75 (11th A) + 75 (11th B) + 75 (12th A) + 75 (12th B) = 300
+            let mathMax = 0;
+            if (mathematics11A.entered) mathMax += 75;
+            if (mathematics11B.entered) mathMax += 75;
+            if (mathematics12A.entered) mathMax += 75;
+            if (mathematics12B.entered) mathMax += 75;
+            // PCM obtained and max
+            pcmObtained = phyTotal + chemTotal + mathTotal;
+            // For percentage, always use 600 as denominator (per your rule)
+            pcmPercentageStr = ((pcmObtained / 600) * 100).toFixed(2);
+
+            // --- Total Percentage Calculation (AP/Telangana logic) ---
+            // Total out of 1000: all 11th and 12th marks (physics, chemistry, maths, language, english, optionals, etc.)
+            let totalObtained = 0;
+            let totalMax = 0;
+            // 11th
+            if (physics11Theory.entered) { totalObtained += physics11Theory.value; totalMax += 60; }
+            if (chemistry11Theory.entered) { totalObtained += chemistry11Theory.value; totalMax += 60; }
+            if (mathematics11A.entered) { totalObtained += mathematics11A.value; totalMax += 75; }
+            if (mathematics11B.entered) { totalObtained += mathematics11B.value; totalMax += 75; }
+            if (english11.entered) { totalObtained += english11.value; totalMax += 100; }
+            if (language11.entered) { totalObtained += language11.value; totalMax += 100; }
+            // 12th
+            if (physics12Theory.entered) { totalObtained += physics12Theory.value; totalMax += 60; }
+            if (physics12Practical.entered) { totalObtained += physics12Practical.value; totalMax += 30; }
+            if (chemistry12Theory.entered) { totalObtained += chemistry12Theory.value; totalMax += 60; }
+            if (chemistry12Practical.entered) { totalObtained += chemistry12Practical.value; totalMax += 30; }
+            if (mathematics12A.entered) { totalObtained += mathematics12A.value; totalMax += 75; }
+            if (mathematics12B.entered) { totalObtained += mathematics12B.value; totalMax += 75; }
+            // Optionals (12th)
+            if (cs12.entered) { totalObtained += cs12.value; totalMax += 100; }
+            if (bio12.entered) { totalObtained += bio12.value; totalMax += 100; }
+            if (ece12.entered) { totalObtained += ece12.value; totalMax += 100; }
+            if (kannada12.entered && kannadaInputElement && !kannadaInputElement.disabled) { totalObtained += kannada12.value; totalMax += 100; }
+            if (english12.entered && englishInputElement && !englishInputElement.disabled) { totalObtained += english12.value; totalMax += 100; }
+            if (otherUnnamed12.entered && otherUnnamedMarksInputElement && !otherUnnamedMarksInputElement.disabled) { totalObtained += otherUnnamed12.value; totalMax += 100; }
+            // For percentage, always use 1000 as denominator (per your rule)
+            totalPercentageStr = ((totalObtained / 1000) * 100).toFixed(2);
+
+            pcmPercentageInput.value = pcmPercentageStr;
+            totalPercentageInput.value = totalPercentageStr;
+            return;
+        }
+
+        // --- CBSE/Karnataka Logic: All subjects max marks is 100 ---
+        if (educationBoard === 'CBSE' || educationBoard === 'Karnataka' || educationBoard === 'Other') {
+            // PCM calculation: Physics + Mathematics + best of (Chemistry, CS, BIO, ECE)
+            let physicsVal = (physicsInput && physicsInput.value.trim() !== '') ? parseFloat(physicsInput.value) : null;
+            let mathVal = (mathematics12StandardInput && mathematics12StandardInput.value.trim() !== '') ? parseFloat(mathematics12StandardInput.value) : null;
+            let chemVal = (chemistryInput && chemistryInput.value.trim() !== '') ? parseFloat(chemistryInput.value) : null;
+            let csVal = (csInput && csInput.value.trim() !== '') ? parseFloat(csInput.value) : null;
+            let bioVal = (bioInput && bioInput.value.trim() !== '') ? parseFloat(bioInput.value) : null;
+            let eceVal = (eceInput && eceInput.value.trim() !== '') ? parseFloat(eceInput.value) : null;
+            let optionals = [chemVal, csVal, bioVal, eceVal].filter(v => v !== null && !isNaN(v));
+            if (
+                physicsVal !== null && !isNaN(physicsVal) &&
+                mathVal !== null && !isNaN(mathVal) &&
+                optionals.length > 0
+            ) {
+                let bestOptional = Math.max(...optionals);
+                let pcmMarks = physicsVal + mathVal + bestOptional;
+                pcmPercentageStr = ((pcmMarks / 300) * 100).toFixed(2);
+            } else {
+                pcmPercentageStr = '';
             }
-        });
-    } else {
-        // If fewer than two are filled, enable all
-        allInputs.forEach(input => {
-            input.disabled = false;
-        });
-    }
-    if (typeof calculatePercentages === 'function') calculatePercentages(); // Recalculate after any change
-}
 
-
-function calculatePercentages() {
-    const educationBoard = educationBoardSelect ? educationBoardSelect.value : '';
-
-    // Helper to get parseFloat or 0, and check if field has a value
-    const getMark = (inputElement) => {
-        if (!inputElement || inputElement.value.trim() === '') return { value: 0, entered: false };
-        const val = parseFloat(inputElement.value);
-        if (isNaN(val) || val < 0) return { value: 0, entered: true };
-        return { value: val, entered: true };
-    };
-
-    let total12Obtained = 0;
-    let total12Max = 0;
-    let pcmPercentageStr = '';
-    let totalPercentageStr = '';
-
-    // Get 12th Standard Marks
-    const physics12Theory = getMark(physicsInput);
-    const chemistry12Theory = getMark(chemistryInput);
-    const mathematics12A = getMark(mathematics12aInput);
-    const mathematics12B = getMark(mathematics12bInput);
-    const mathematics12Std = getMark(mathematics12StandardInput);
-    const physics12Practical = getMark(physics12PracticalInput);
-    const chemistry12Practical = getMark(chemistry12PracticalInput);
-
-    // Get 11th Standard Marks (AP/Telangana specific)
-    const physics11Theory = getMark(physics11Input);
-    const chemistry11Theory = getMark(chemistry11Input);
-    const mathematics11A = getMark(mathematics11aInput);
-    const mathematics11B = getMark(mathematics11bInput);
-
-    // Optional Subjects for PCM best-of calculation (12th)
-    const cs12 = getMark(csInput);
-    const bio12 = getMark(bioInput);
-    const ece12 = getMark(eceInput);
-
-    // Optional 11th standard subjects
-    const english11 = getMark(english11Input);
-    const language11 = getMark(language11Input);
-    // Other optionals for total percentage
-    const kannada12 = getMark(document.getElementById('kannada_marks_12'));
-    const english12 = getMark(document.getElementById('english_marks_12'));
-    const otherUnnamed12 = getMark(document.getElementById('other_unnamed_marks_12'));
-    const kannadaInputElement = document.getElementById('kannada_marks_12');
-    const englishInputElement = document.getElementById('english_marks_12');
-    const otherUnnamedMarksInputElement = document.getElementById('other_unnamed_marks_12');
-
-    // --- PCM and Total Percentage Calculation (AP/Telangana logic) ---
-    if (educationBoard === 'AP/Telangana') {
-        // PCM: Physics (theory+practical, 11th+12th), Chemistry (theory+practical, 11th+12th), Maths A+B (11th+12th)
-        let pcmObtained = 0;
-        let pcmMax = 600;
-        // Physics
-        let phyTotal = 0;
-        if (physics11Theory.entered) phyTotal += physics11Theory.value;
-        if (physics12Theory.entered) phyTotal += physics12Theory.value;
-        if (physics12Practical.entered) phyTotal += physics12Practical.value;
-        // Max for physics: 60 (11th) + 60 (12th theory) + 30 (12th practical) = 150
-        let phyMax = 0;
-        if (physics11Theory.entered) phyMax += 60;
-        if (physics12Theory.entered) phyMax += 60;
-        if (physics12Practical.entered) phyMax += 30;
-        // Chemistry
-        let chemTotal = 0;
-        if (chemistry11Theory.entered) chemTotal += chemistry11Theory.value;
-        if (chemistry12Theory.entered) chemTotal += chemistry12Theory.value;
-        if (chemistry12Practical.entered) chemTotal += chemistry12Practical.value;
-        // Max for chemistry: 60 (11th) + 60 (12th theory) + 30 (12th practical) = 150
-        let chemMax = 0;
-        if (chemistry11Theory.entered) chemMax += 60;
-        if (chemistry12Theory.entered) chemMax += 60;
-        if (chemistry12Practical.entered) chemMax += 30;
-        // Maths
-        let mathTotal = 0;
-        if (mathematics11A.entered) mathTotal += mathematics11A.value;
-        if (mathematics11B.entered) mathTotal += mathematics11B.value;
-        if (mathematics12A.entered) mathTotal += mathematics12A.value;
-        if (mathematics12B.entered) mathTotal += mathematics12B.value;
-        // Max for maths: 75 (11th A) + 75 (11th B) + 75 (12th A) + 75 (12th B) = 300
-        let mathMax = 0;
-        if (mathematics11A.entered) mathMax += 75;
-        if (mathematics11B.entered) mathMax += 75;
-        if (mathematics12A.entered) mathMax += 75;
-        if (mathematics12B.entered) mathMax += 75;
-        // PCM obtained and max
-        pcmObtained = phyTotal + chemTotal + mathTotal;
-        // For percentage, always use 600 as denominator (per your rule)
-        pcmPercentageStr = ((pcmObtained / 600) * 100).toFixed(2);
-
-        // --- Total Percentage Calculation (AP/Telangana logic) ---
-        // Total out of 1000: all 11th and 12th marks (physics, chemistry, maths, language, english, optionals, etc.)
-        let totalObtained = 0;
-        let totalMax = 0;
-        // 11th
-        if (physics11Theory.entered) { totalObtained += physics11Theory.value; totalMax += 60; }
-        if (chemistry11Theory.entered) { totalObtained += chemistry11Theory.value; totalMax += 60; }
-        if (mathematics11A.entered) { totalObtained += mathematics11A.value; totalMax += 75; }
-        if (mathematics11B.entered) { totalObtained += mathematics11B.value; totalMax += 75; }
-        if (english11.entered) { totalObtained += english11.value; totalMax += 100; }
-        if (language11.entered) { totalObtained += language11.value; totalMax += 100; }
-        // 12th
-        if (physics12Theory.entered) { totalObtained += physics12Theory.value; totalMax += 60; }
-        if (physics12Practical.entered) { totalObtained += physics12Practical.value; totalMax += 30; }
-        if (chemistry12Theory.entered) { totalObtained += chemistry12Theory.value; totalMax += 60; }
-        if (chemistry12Practical.entered) { totalObtained += chemistry12Practical.value; totalMax += 30; }
-        if (mathematics12A.entered) { totalObtained += mathematics12A.value; totalMax += 75; }
-        if (mathematics12B.entered) { totalObtained += mathematics12B.value; totalMax += 75; }
-        // Optionals (12th)
-        if (cs12.entered) { totalObtained += cs12.value; totalMax += 100; }
-        if (bio12.entered) { totalObtained += bio12.value; totalMax += 100; }
-        if (ece12.entered) { totalObtained += ece12.value; totalMax += 100; }
-        if (kannada12.entered && kannadaInputElement && !kannadaInputElement.disabled) { totalObtained += kannada12.value; totalMax += 100; }
-        if (english12.entered && englishInputElement && !englishInputElement.disabled) { totalObtained += english12.value; totalMax += 100; }
-        if (otherUnnamed12.entered && otherUnnamedMarksInputElement && !otherUnnamedMarksInputElement.disabled) { totalObtained += otherUnnamed12.value; totalMax += 100; }
-        // For percentage, always use 1000 as denominator (per your rule)
-        totalPercentageStr = ((totalObtained / 1000) * 100).toFixed(2);
-
-        pcmPercentageInput.value = pcmPercentageStr;
-        totalPercentageInput.value = totalPercentageStr;
-        return;
-    }
-
-    // --- CBSE/Karnataka Logic: All subjects max marks is 100 ---
-    if (educationBoard === 'CBSE' || educationBoard === 'Karnataka') {
-        // PCM calculation
-        let pcmMarks = 0;
-        let pcmMax = 0;
-        // Physics
-        if (physicsInput && physicsInput.value.trim() !== '') {
-            pcmMarks += parseFloat(physicsInput.value);
-            pcmMax += 100;
-        }
-        // Chemistry
-        if (chemistryInput && chemistryInput.value.trim() !== '') {
-            pcmMarks += parseFloat(chemistryInput.value);
-            pcmMax += 100;
-        }
-        // Mathematics
-        if (mathematics12StandardInput && mathematics12StandardInput.value.trim() !== '') {
-            pcmMarks += parseFloat(mathematics12StandardInput.value);
-            pcmMax += 100;
-        }
-        // Best of CS/BIO/ECE
-        let optionalBest = 0;
-        if (csInput && csInput.value.trim() !== '') optionalBest = Math.max(optionalBest, parseFloat(csInput.value));
-        if (bioInput && bioInput.value.trim() !== '') optionalBest = Math.max(optionalBest, parseFloat(bioInput.value));
-        if (eceInput && eceInput.value.trim() !== '') optionalBest = Math.max(optionalBest, parseFloat(eceInput.value));
-        if (optionalBest > 0) {
-            pcmMarks += optionalBest;
-            pcmMax += 100;
-        }
-        if (pcmMax > 0) {
-            pcmPercentageStr = ((pcmMarks / pcmMax) * 100).toFixed(2);
-        } else {
-            pcmPercentageStr = '';
-        }
-
-        // Total percentage: sum all entered marks, divide by (number of entered subjects * 100)
-        let totalMarks = 0;
-        let totalSubjects = 0;
-        // List all relevant inputs for total calculation
-        const totalInputs = [physicsInput, chemistryInput, mathematics12StandardInput, csInput, bioInput, eceInput,
-            document.getElementById('kannada_marks_12'),
-            document.getElementById('english_marks_12'),
-            document.getElementById('other_unnamed_marks_12')
-        ];
-        totalInputs.forEach(input => {
-            if (input && input.value.trim() !== '') {
-                totalMarks += parseFloat(input.value);
-                totalSubjects += 1;
+            // Total percentage: sum all entered marks, divide by (number of entered subjects * 100)
+            let totalMarks = 0;
+            let totalSubjects = 0;
+            // List all relevant inputs for total calculation
+            const totalInputs = [physicsInput, chemistryInput, mathematics12StandardInput, csInput, bioInput, eceInput,
+                document.getElementById('kannada_marks_12'),
+                document.getElementById('english_marks_12'),
+                document.getElementById('other_unnamed_marks_12')
+            ];
+            totalInputs.forEach(input => {
+                if (input && input.value.trim() !== '') {
+                    totalMarks += parseFloat(input.value);
+                    totalSubjects += 1;
+                }
+            });
+            if (totalSubjects > 0) {
+                totalPercentageStr = ((totalMarks / (totalSubjects * 100)) * 100).toFixed(2);
+            } else {
+                totalPercentageStr = '';
             }
-        });
-        if (totalSubjects > 0) {
-            totalPercentageStr = ((totalMarks / (totalSubjects * 100)) * 100).toFixed(2);
-        } else {
-            totalPercentageStr = '';
+            pcmPercentageInput.value = pcmPercentageStr;
+            totalPercentageInput.value = totalPercentageStr;
+            return;
         }
-        pcmPercentageInput.value = pcmPercentageStr;
-        totalPercentageInput.value = totalPercentageStr;
-        return;
+        // ... existing logic for other boards ...
     }
-    // ... existing logic for other boards ...
-}
 
     const formUtils = {
         displayFieldError: function(inputElement, message) {
@@ -1061,14 +1060,21 @@ function calculatePercentages() {
             isValid = formUtils.validateNumericField(bioInput, 'Biology Marks', false, 0, currentMaxMarks.bio) && isValid;
             isValid = formUtils.validateNumericField(eceInput, 'ECE Marks', false, 0, currentMaxMarks.ece) && isValid;
 
-            // Get the new optional subject input elements for validation
+            // --- At least one of Kannada, English, Others must be filled, and at most two ---
             const kannadaMarks12Input = document.getElementById('kannada_marks_12');
             const englishMarks12Input = document.getElementById('english_marks_12');
             const otherUnnamedMarks12Input = document.getElementById('other_unnamed_marks_12');
-
-            isValid = formUtils.validateNumericField(kannadaMarks12Input, 'Kannada Marks', false, 0, currentMaxMarks.kannada) && isValid;
-            isValid = formUtils.validateNumericField(englishMarks12Input, 'English Marks', false, 0, currentMaxMarks.english12) && isValid;
-            isValid = formUtils.validateNumericField(otherUnnamedMarks12Input, 'Other Unnamed Marks', false, 0, currentMaxMarks.other) && isValid;
+            const optionalInputs = [kannadaMarks12Input, englishMarks12Input, otherUnnamedMarks12Input];
+            const filledOptionals = optionalInputs.filter(input => input && input.value.trim() !== '');
+            // Remove previous error messages
+            optionalInputs.forEach(input => formUtils.clearFieldError(input));
+            if (filledOptionals.length === 0) {
+                isValid = false;
+                optionalInputs.forEach(input => formUtils.displayFieldError(input, 'At least one of these fields must be filled.'));
+            } else if (filledOptionals.length > 2) {
+                isValid = false;
+                optionalInputs.forEach(input => formUtils.displayFieldError(input, 'You can fill at most two of these fields.'));
+            }
 
             // --- Course Preferences Validation ---
             const courseCheckboxes = document.querySelectorAll('.course-checkbox:checked');
