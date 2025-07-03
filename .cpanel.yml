@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/svceadmin/enquiry.svcengg.edu.in/
+    - export DEPLOYPATH=/home/svceadmin/enquiries.svcengg.com/
     - /bin/rsync -av --exclude='.git' --exclude='.cpanel.yml' . ${DEPLOYPATH}
