@@ -83,6 +83,39 @@ header {
     position: relative;
 }
 
+/* PG-FORM top-right button */
+.pg-form-button-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+}
+
+#pg-form-button {
+    background: linear-gradient(135deg, #6a8dff, #5e72e4);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(94, 114, 228, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+#pg-form-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(94, 114, 228, 0.35);
+    background: linear-gradient(135deg, #5e7df0, #4f64db);
+}
+
+#pg-form-button i {
+    font-size: 16px;
+}
+
 .print-button-container {
     position: absolute;
     top: 10px;
@@ -704,6 +737,10 @@ button:active {
     #resetBtn,
     #submitBtn {
         display: none;
+    }
+    /* Hide PG-FORM button on print */
+    .pg-form-button-container {
+        display: none !important;
     }
 }
 

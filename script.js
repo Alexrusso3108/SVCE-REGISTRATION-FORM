@@ -151,6 +151,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     displayDateAndToken();
 
+    // PG-FORM navigation with loader
+    const pgFormButton = document.getElementById('pg-form-button');
+    if (pgFormButton) {
+        pgFormButton.addEventListener('click', function(e) {
+            // Prevent immediate navigation
+            e.preventDefault();
+            const href = pgFormButton.getAttribute('href');
+            if (!href) return;
+
+            // Show loader and hide content
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('main-content');
+            if (loader) loader.classList.remove('loader-hidden');
+            if (mainContent) mainContent.classList.remove('content-visible');
+
+            // Small delay so loader is visible before navigating
+            setTimeout(() => {
+                window.location.href = href;
+            }, 600);
+        });
+    }
+
     // DOM elements
     const enquiryForm = document.getElementById('enquiryForm');
     const resetBtn = document.getElementById('resetBtn');

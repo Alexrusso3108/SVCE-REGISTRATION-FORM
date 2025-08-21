@@ -124,6 +124,21 @@
         width: 100%;
         justify-content: center;
     }
+
+    /* PG-FORM button responsive */
+    .pg-form-button-container {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    #pg-form-button {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Extra small devices */
