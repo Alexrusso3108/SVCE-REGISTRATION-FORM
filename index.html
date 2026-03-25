@@ -10,14 +10,27 @@
     <link rel="stylesheet" href="responsive.css">
     <link rel="stylesheet" href="animations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Ensure content is always visible after loader */
+        .content-container {
+            display: none;
+        }
+        .content-container.show {
+            display: block !important;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
     <canvas id="constellation-canvas"></canvas>
+    
     <!-- Enhanced 3D Loader overlay -->
     <div class="loader-container" id="loader">
-        <!-- 3D floor grid effect -->
         <div class="loader-floor"></div>
-        
         <div class="loader-content">
             <img src="logo3.jpg" alt="SVCE Logo" class="loader-logo">
             <div class="loader-spinner">
@@ -185,11 +198,11 @@
                         <!-- Row 1: Physics, Chemistry, Mathematics -->
                         <div class="marks-field">
                             <label for="physics">Physics (Theory):</label>
-                            <input type="number" id="physics" name="physics" required> <!-- Max set by JS -->
+                            <input type="number" id="physics" name="physics" required>
                         </div>
                         <div class="marks-field">
                             <label for="chemistry">Chemistry (Theory): <span class="optional-note">(Optional)</span></label>
-                            <input type="number" id="chemistry" name="chemistry"> <!-- Max set by JS -->
+                            <input type="number" id="chemistry" name="chemistry">
                         </div>
                         <div class="marks-field" id="mathematics12_standard_group">
                             <label for="mathematics">Mathematics:</label>
@@ -198,11 +211,11 @@
                         <!-- Hidden practicals and A/B math -->
                         <div class="marks-field" id="physics12Practical_group" style="display: none;">
                             <label for="physics12Practical">Physics (Practical):</label>
-                            <input type="number" id="physics12Practical" name="physics12Practical"> <!-- Max set by JS -->
+                            <input type="number" id="physics12Practical" name="physics12Practical">
                         </div>
                         <div class="marks-field" id="chemistry12Practical_group" style="display: none;">
                             <label for="chemistry12Practical">Chemistry (Practical):</label>
-                            <input type="number" id="chemistry12Practical" name="chemistry12Practical"> <!-- Max set by JS -->
+                            <input type="number" id="chemistry12Practical" name="chemistry12Practical">
                         </div>
                         <div class="marks-field" id="mathematics12a_group" style="display: none;">
                             <label for="mathematics12a">Mathematics (A):</label>
@@ -321,8 +334,6 @@
                 </div>
             </div>
             
-
-            
             <div class="form-actions">
                 <button type="submit" id="submitBtn">Submit</button>
                 <button type="button" id="resetBtn">Reset</button>
@@ -340,45 +351,233 @@
         </div>
     </div>
 
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Config file with Supabase credentials -->
-    <script src="supabase-config.js"></script>
-    <!-- Database setup script -->
-    <script src="db-setup.js"></script>
-    <!-- Main script file -->
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="database-config-docker.js"></script>
     <script src="constellation.js"></script>
-<script src="constellation.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>
-  (function(){
-    emailjs.init("R8kC7SvFiTpTWYpik"); // Your EmailJS user ID
-  })();
-</script>
-<script>
-// Dynamically set max for Physics/Chemistry Theory/Practical for AP/Telangana
-function setAPTelanganaMaxMarks() {
-    const board = document.getElementById('education_board')?.value;
-    const fields = [
-        {id: 'physics', max: 60},
-        {id: 'chemistry', max: 60},
-        {id: 'physics12Practical', max: 30},
-        {id: 'chemistry12Practical', max: 30},
-    ];
-    fields.forEach(f => {
-        const el = document.getElementById(f.id);
-        if (el) {
-            if (board === 'AP/Telangana') {
-                el.max = f.max;
+    
+    <script>
+        // Proper loader management
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('main-content');
+            
+            // Initialize form functionality
+            initializeForm();
+            
+            // Test database connection and show content when ready
+            if (typeof dbConnection !== 'undefined') {
+                dbConnection.testConnection().then(connected => {
+                    console.log('Database connection:', connected ? 'Success' : 'Failed');
+                    showMainContent();
+                }).catch(error => {
+                    console.error('Database connection error:', error);
+                    showMainContent(); // Show form even if database fails
+                });
             } else {
-                el.removeAttribute('max');
+                // Show content after 2 seconds if no database connection
+                setTimeout(showMainContent, 2000);
+            }
+            
+            function showMainContent() {
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+                if (mainContent) {
+                    mainContent.classList.add('show');
+                }
+                console.log('Main content displayed');
+            }
+        });
+        
+        function initializeForm() {
+            // Set current date and token
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('en-GB');
+            document.getElementById('enquiry-date').textContent = formattedDate;
+            
+            // Generate token
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            document.getElementById('token-number').textContent = `${day}/${month}/${year}/01`;
+            
+            // Educational qualification change handler
+            document.getElementById('educationalQualification').addEventListener('change', function() {
+                const diplomaFields = document.getElementById('diplomaFields');
+                if (this.value === 'Diploma') {
+                    diplomaFields.style.display = 'block';
+                } else {
+                    diplomaFields.style.display = 'none';
+                }
+            });
+            
+            // Education board change handler
+            document.getElementById('educationBoard').addEventListener('change', function() {
+                const marks11thSection = document.getElementById('marks11thSection');
+                if (this.value === 'AP/Telangana') {
+                    marks11thSection.style.display = 'block';
+                    // Show practical fields for AP/Telangana
+                    document.getElementById('physics12Practical_group').style.display = 'block';
+                    document.getElementById('chemistry12Practical_group').style.display = 'block';
+                    document.getElementById('mathematics12a_group').style.display = 'block';
+                    document.getElementById('mathematics12b_group').style.display = 'block';
+                    // Hide standard mathematics
+                    document.getElementById('mathematics12_standard_group').style.display = 'none';
+                } else {
+                    marks11thSection.style.display = 'none';
+                    // Hide practical fields
+                    document.getElementById('physics12Practical_group').style.display = 'none';
+                    document.getElementById('chemistry12Practical_group').style.display = 'none';
+                    document.getElementById('mathematics12a_group').style.display = 'none';
+                    document.getElementById('mathematics12b_group').style.display = 'none';
+                    // Show standard mathematics
+                    document.getElementById('mathematics12_standard_group').style.display = 'block';
+                }
+            });
+            
+            // Course preference handling
+            let coursePreferenceOrder = [];
+            document.querySelectorAll('.course-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        coursePreferenceOrder.push(this.value);
+                        updatePreferenceIndicators();
+                    } else {
+                        const index = coursePreferenceOrder.indexOf(this.value);
+                        if (index > -1) {
+                            coursePreferenceOrder.splice(index, 1);
+                            updatePreferenceIndicators();
+                        }
+                    }
+                });
+            });
+            
+            function updatePreferenceIndicators() {
+                document.querySelectorAll('.course-checkbox').forEach(checkbox => {
+                    const indicator = checkbox.parentElement.querySelector('.preference-indicator');
+                    if (checkbox.checked) {
+                        const order = coursePreferenceOrder.indexOf(checkbox.value) + 1;
+                        indicator.textContent = order;
+                        indicator.style.display = 'block';
+                    } else {
+                        indicator.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Form submission
+            document.getElementById('enquiryForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('submitBtn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+                
+                try {
+                    // Collect form data
+                    const formData = {
+                        student_name: document.getElementById('studentName').value,
+                        father_name: document.getElementById('fatherName').value,
+                        mother_name: document.getElementById('motherName').value,
+                        student_email: document.getElementById('studentEmail').value,
+                        student_mobile: document.getElementById('studentMobile').value,
+                        father_mobile: document.getElementById('fatherMobile').value,
+                        mother_mobile: document.getElementById('motherMobile').value,
+                        address: document.getElementById('address').value,
+                        reference: document.getElementById('reference').value,
+                        education_qualification: document.getElementById('educationalQualification').value,
+                        education_board: document.getElementById('educationBoard').value,
+                        physics_marks: parseFloat(document.getElementById('physics').value) || 0,
+                        chemistry_marks: parseFloat(document.getElementById('chemistry').value) || 0,
+                        mathematics_marks: parseFloat(document.getElementById('mathematics').value) || 0,
+                        cs_marks: parseFloat(document.getElementById('cs').value) || null,
+                        bio_marks: parseFloat(document.getElementById('bio').value) || null,
+                        ece_marks: parseFloat(document.getElementById('ece').value) || null,
+                        total_percentage: parseFloat(document.getElementById('totalPercentage').value),
+                        pcm_percentage: parseFloat(document.getElementById('pcmPercentage').value),
+                        jee_rank: document.getElementById('jeeRank').value || null,
+                        comedk_rank: document.getElementById('comedk').value || null,
+                        cet_rank: document.getElementById('cetRank').value || null,
+                        course_preferences: coursePreferenceOrder,
+                        diploma_percentage: parseFloat(document.getElementById('diplomaPercentage').value) || null,
+                        dcet_rank: document.getElementById('dcetRank').value || null
+                    };
+                    
+                    // Submit to database
+                    if (typeof dbConnection !== 'undefined') {
+                        const { data, error } = await dbConnection.submitEnquiry(formData);
+                        
+                        if (error) {
+                            throw new Error(error);
+                        }
+                        
+                        // Show success modal
+                        document.getElementById('tokenNumber').textContent = document.getElementById('token-number').textContent;
+                        document.getElementById('successModal').style.display = 'block';
+                    } else {
+                        alert('Form submitted successfully! (Database connection not available)');
+                    }
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    alert('Error submitting form: ' + error.message);
+                } finally {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+            
+            // Modal handlers
+            const modal = document.getElementById('successModal');
+            const closeBtn = document.querySelector('.close');
+            const resetBtn = document.getElementById('resetBtn');
+            const printBtn = document.getElementById('printFormBtn');
+            
+            if (closeBtn) {
+                closeBtn.onclick = function() {
+                    modal.style.display = 'none';
+                };
+            }
+            
+            if (resetBtn) {
+                resetBtn.onclick = function() {
+                    if (confirm('Are you sure you want to reset the form?')) {
+                        document.getElementById('enquiryForm').reset();
+                        coursePreferenceOrder = [];
+                        updatePreferenceIndicators();
+                    }
+                };
+            }
+            
+            if (printBtn) {
+                printBtn.onclick = function() {
+                    window.print();
+                };
+            }
+            
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+        
+        // Handle exclusive optional subject selection
+        function handleExclusiveOptionalSubjectChange(changedId) {
+            const optionalFields = ['kannada_marks_12', 'english_marks_12', 'other_unnamed_marks_12'];
+            const changedField = document.getElementById(changedId);
+            
+            if (changedField.value) {
+                optionalFields.forEach(fieldId => {
+                    if (fieldId !== changedId) {
+                        document.getElementById(fieldId).value = '';
+                    }
+                });
             }
         }
-    });
-}
-document.getElementById('education_board')?.addEventListener('change', setAPTelanganaMaxMarks);
-window.addEventListener('DOMContentLoaded', setAPTelanganaMaxMarks);
-</script>
+    </script>
 </body>
 </html>
