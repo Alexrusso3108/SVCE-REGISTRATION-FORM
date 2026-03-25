@@ -144,6 +144,13 @@ app.post('/api/admissions', async (req, res) => {
             ) RETURNING *
         `;
 
+        // Helper function to safely parse integers
+        const parseIntOrNull = (value) => {
+            if (!value || value === '' || value === null || value === undefined) return null;
+            const parsed = parseInt(value);
+            return isNaN(parsed) ? null : parsed;
+        };
+
         const values = [
             token_number, 
             enquiry_date, 
@@ -166,12 +173,12 @@ app.post('/api/admissions', async (req, res) => {
             ece_marks, 
             total_percentage, 
             pcm_percentage,
-            jee_rank ? parseInt(jee_rank) : null, 
-            comedk_rank ? parseInt(comedk_rank) : null, 
-            cet_rank ? parseInt(cet_rank) : null, 
+            parseIntOrNull(jee_rank), 
+            parseIntOrNull(comedk_rank), 
+            parseIntOrNull(cet_rank), 
             JSON.stringify(course_preferences),
             diploma_percentage, 
-            dcet_rank ? parseInt(dcet_rank) : null
+            parseIntOrNull(dcet_rank)
         ];
 
         let result;
