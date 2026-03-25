@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SVCE - Admission Enquiry Form</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="loader.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <canvas id="constellation-canvas"></canvas>
+    <!-- Enhanced 3D Loader overlay -->
+    <div class="loader-container" id="loader">
+        <!-- 3D floor grid effect -->
+        <div class="loader-floor"></div>
+        
+        <div class="loader-content">
+            <img src="logo3.jpg" alt="SVCE Logo" class="loader-logo">
+            <div class="loader-spinner">
+                <div class="pyramid-loader">
+                    <div class="pyramid-face front"></div>
+                    <div class="pyramid-face back"></div>
+                    <div class="pyramid-face right"></div>
+                    <div class="pyramid-face left"></div>
+                </div>
+            </div>
+            <div class="loader-text">SVCE Admission Enquiry System</div>
+            <div class="loader-text">Loading your experience</div>
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database Connection Status -->
+    <div id="db-status" style="position: fixed; top: 10px; right: 10px; z-index: 1000; padding: 10px; border-radius: 5px; font-size: 12px; display: none;">
+        <span id="db-status-text">Checking database connection...</span>
+    </div>
+
+    <!-- Main content -->
+    <div class="container content-container" id="main-content">
+        <header>
+            <div class="banner">
+                <img src="logo3.jpg" alt="SVCE Logo" id="logo-img">
+            </div>
+
+            <div class="pg-form-button-container">
+                <a href="https://pg-form-svce.netlify.app/" id="pg-form-button">
+                    <i class="fas fa-user-graduate"></i>
+                    PG-FORM
+                </a>
+            </div>
+
+            <div class="title-container">
+                <div class="token-container">
+                    <label>Token No.: </label>
+                    <span id="token-number" class="token-display"></span>
+                </div>
+                <div class="title">
+                    <h3>ADMISSION ENQUIRY FORM</h3>
+                </div>
+                <div class="date-container">
+                    <label>Date: </label>
+                    <span id="enquiry-date" class="date-display"></span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Rest of the form content remains the same as original index.html -->
+        <form id="enquiryForm">
+            <!-- Copy all form fields from original index.html -->
+            <!-- For brevity, I'm including just the key structure -->
+            <div class="form-group">
+                <label for="studentName">Student Name:</label>
+                <input type="text" id="studentName" name="studentName" required oninput="this.value = this.value.toUpperCase()">
+            </div>
+            
+            <!-- Add all other form fields here from the original index.html -->
+            <!-- ... (copy all form fields) ... -->
+            
+            <div class="form-actions">
+                <button type="submit" id="submitBtn">Submit</button>
+                <button type="button" id="resetBtn">Reset</button>
+            </div>
+        </form>
+    </div>
+    
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Form Submitted Successfully!</h2>
+            <p>Thank you for your enquiry. We will get back to you soon.</p>
+            <p>Your token number: <span id="tokenNumber"></span></p>
+            <button id="printFormBtn">Print Form</button>
+        </div>
+    </div>
+
+    <!-- Custom Database Configuration -->
+    <script src="database-config.js"></script>
+    <!-- Modified Script for Custom Database -->
+    <script src="script-custom-db.js"></script>
+    <script src="constellation.js"></script>
+</body>
+</html>

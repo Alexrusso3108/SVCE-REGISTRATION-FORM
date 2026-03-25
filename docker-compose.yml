@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Backend API Service
+  svce-registration-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: svce-registration-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_TYPE=postgresql
+      - DB_HOST=100.78.37.57  # Your existing database host
+      - DB_PORT=5434          # Your existing database port
+      - DB_NAME=admission_dash
+      - DB_USER=postgres
+      - DB_PASSWORD=123456
+      - PORT=3001
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - svce-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service
+  svce-registration-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: svce-registration-frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - svce-registration-backend
+    restart: unless-stopped
+    networks:
+      - svce-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  svce-network:
+    driver: bridge
+
+# Note: We're connecting to your existing PostgreSQL database
+# running in a separate Docker setup, so no database service is defined here
