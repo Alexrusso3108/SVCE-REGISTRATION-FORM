@@ -11,8 +11,8 @@ const DB_CONFIG = {
 
 // API configuration for Docker deployment
 const API_CONFIG = {
-    // Use relative path since nginx will proxy /api/ requests to backend
-    baseURL: '/api',
+    // Use direct backend access on port 3001
+    baseURL: 'http://100.78.37.57:3001/api',
     endpoints: {
         admissions: '/admissions',
         health: '/health'
