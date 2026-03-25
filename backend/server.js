@@ -145,13 +145,33 @@ app.post('/api/admissions', async (req, res) => {
         `;
 
         const values = [
-            token_number, enquiry_date, student_name, father_name, mother_name,
-            student_email, student_mobile, father_mobile, mother_mobile,
-            address, reference, education_qualification, education_board,
-            physics_marks, chemistry_marks, mathematics_marks,
-            cs_marks, bio_marks, ece_marks, total_percentage, pcm_percentage,
-            jee_rank, comedk_rank, cet_rank, JSON.stringify(course_preferences),
-            diploma_percentage, dcet_rank
+            token_number, 
+            enquiry_date, 
+            student_name, 
+            father_name, 
+            mother_name,
+            student_email, 
+            student_mobile, 
+            father_mobile, 
+            mother_mobile,
+            address, 
+            reference, 
+            education_qualification, 
+            education_board,
+            physics_marks, 
+            chemistry_marks, 
+            mathematics_marks,
+            cs_marks, 
+            bio_marks, 
+            ece_marks, 
+            total_percentage, 
+            pcm_percentage,
+            jee_rank ? parseInt(jee_rank) : null, 
+            comedk_rank ? parseInt(comedk_rank) : null, 
+            cet_rank ? parseInt(cet_rank) : null, 
+            JSON.stringify(course_preferences),
+            diploma_percentage, 
+            dcet_rank ? parseInt(dcet_rank) : null
         ];
 
         let result;
