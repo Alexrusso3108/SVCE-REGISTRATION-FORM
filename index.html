@@ -11,17 +11,21 @@
     <link rel="stylesheet" href="animations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        /* Ensure content is always visible after loader */
+        /* Force content visibility */
+        .loader-container {
+            animation: hideLoader 3s forwards;
+        }
+        @keyframes hideLoader {
+            0%, 90% { opacity: 1; display: flex; }
+            100% { opacity: 0; display: none; }
+        }
         .content-container {
             display: none;
+            animation: showContent 3s forwards;
         }
-        .content-container.show {
-            display: block !important;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes showContent {
+            0%, 90% { opacity: 0; display: none; }
+            100% { opacity: 1; display: block; }
         }
     </style>
 </head>
